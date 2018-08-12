@@ -45,6 +45,22 @@ class PhoneRepository implements  PhoneRepositoryInterface
             return false;
         }
     }
+    public function searchAndList($dateFrom, $dateTo, $type, $status, $phone)
+    {
+        $query = Phone::select('*')
+            ->where(\DB::raw('date(`created_at`)'),'>=', $dateFrom)
+            ->where(\DB::raw('date(`created_at`)'),'<=', $dateTo);
+        if($type!='999') {
+            $query->where('type', $type);
+        }
+        if($status!=999) {
+            $query->where('status', $status);
+        }
+        if(!empty($phone)) {
+            $query->where('phone', 'like', '%'.$phone.'%');
+        }
+        return $query->get();
+    }
 }
 
 ?>

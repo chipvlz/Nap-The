@@ -10,5 +10,7 @@
      public function update($id, $data);
 
      public function delete($id);
+
+     public function searchAndList($dateFrom, $dateTo, $type, $status, $phone);
  }
 ?>

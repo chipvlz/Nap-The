@@ -67,12 +67,34 @@ class PhoneController extends Controller
     public function processListPhone(Request $request)
     {
             $param = [];
-            $param['dateForm'] = ($request->has('dateFrom')) ? $request->get('dateFrom') : date('Y-m-d');
-            $param['dateTo'] = ($request->has('dateTo')) ? $request->get('dateTo') : date('Y-m-d');
-            $param['dateForm'] = ($request->has('dateFrom')) ? $request->get('dateFrom') : date('Y-m-d');
+            $param['dateForm'] = ($request->has('dateFrom')) ? date('Y-m-d', strtotime($request->get('dateFrom'))) : date('Y-m-d');
+            $param['dateTo'] = ($request->has('dateTo')) ? date('Y-m-d', strtotime($request->get('dateTo'))) : date('Y-m-d');
             $param['type'] = ($request->has('type')) ? $request->get('type') : '999';
             $param['status'] = (int)($request->has('status')) ? $request->get('status') : 999;
             $param['phone'] = ($request->has('phone')) ? $request->get('phone') : '';
-            dd($param);
+
+            $dataPhone = $this->phone->searchAndList($param['dateForm'], $param['dateTo'], $param['type'], $param['status'], $param['phone']);
+           $data = [];
+           $total['money_total']=0;
+           $total['money_total_change']=0;
+           foreach ($dataPhone as $item) {
+               $aaRow = $item->toArray();
+               $aaRow['phone_name']=Helper::formatPhoneNumber($item->phone);
+               $aaRow['phone_type'] =config('constant.phone_type')[$item->type];
+               $aaRow['status'] =config('constant.status')[$item->status];
+               $aaRow['money']=number_format($item->money);
+               $aaRow['money_change']=number_format($item->money_change);
+               $data[]=$aaRow;
+               $total['money_total'] +=(int)$item->money ;
+               $total['money_total_change'] +=(int)$item->money_change ;
+           }
+        $total['money_total']=number_format($total['money_total']);
+        $total['money_total_change']=number_format($total['money_total_change']);
+            return response()->json([
+                'total'=>$total,
+                'data'=>$data,
+
+            ]);
+
     }
 }

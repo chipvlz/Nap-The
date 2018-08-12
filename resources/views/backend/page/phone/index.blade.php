@@ -89,11 +89,18 @@
                                 <th>Trạng thái</th>
                                 <th>Người Thêm</th>
                                 <th>Ngày Thêm</th>
+                                <th>action</th>
                             </tr>
                             </thead>
                             <tbody>
 
                             </tbody>
+                            <tfoot style="background: #00caff">
+                            <th colspan="3" class="text-left">Tổng</th>
+                            <th id="total-money"></th>
+                            <th id="total-money-change"></th>
+                            <th colspan="4"></th>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -149,6 +156,9 @@
             ajax: {
                 url: '{{URL::route('phone.post-index')}}',
                 type: 'POST',
+                beforeSend:function(){
+                  console.log('test');
+                },
                 data: function ( d ) {
                     d._token = '{{csrf_token()}}';
                     d.dateFrom = $('#date-from').val();
@@ -159,6 +169,8 @@
                 },
                 dataSrc:"data",
                 complete: function (data) {
+                    $('#total-money').html(data.responseJSON.total.money_total)
+                    $('#total-money-change').html(data.responseJSON.total.money_total_change)
                 },
                 error: function (xhr, error, thrown) {
                     $("#divloader").hide();
@@ -172,6 +184,55 @@
                     "data": "id" ,
                     "name": "id",
                     "className":"text-center"
+                },
+                {
+                    "data": "phone_name" ,
+                    "name": "phone",
+                    "className":"text-center"
+                },
+                {
+                    "data": "phone_type" ,
+                    "name": "type",
+                    "className":"text-center"
+                },
+                {
+                    "data": "money" ,
+                    "name": "money",
+                    "className":"text-center"
+                },
+                {
+                    "data": "money_change" ,
+                    "name": "money_change",
+                    "className":"text-center"
+                },
+                {
+                    "data": "status" ,
+                    "name": "status",
+                    "className":"text-center"
+                },
+                {
+                    "data": "created_user" ,
+                    "name": "created_user",
+                    "className":"text-center"
+                },
+                {
+                    "data": "created_at" ,
+                    "name": "created_at",
+                    "className":"text-left"
+                },
+                {
+                    "data":{
+                        'id':'id'
+                    } ,
+                    "name": "action",
+                    "className":"text-left",
+                    orderable: false,
+                    "render":function (data) {
+                        var result=`<button class="btn btn-success btn-sm">Nạp</button>
+                            <button class="btn btn-danger btn-sm">Dừng</button>
+                            <button class="btn btn-warning btn-sm">Log</button> `;
+                        return result;
+                    }
                 }
 
             ],
