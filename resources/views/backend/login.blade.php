@@ -44,7 +44,7 @@
         <form action="{{URL::route('auth.post-login')}}" method="post">
             {{csrf_field()}}
             <div class="form-group has-feedback {{($errors->has('phone'))?"has-error":""}}">
-                <input type="text" class="form-control" name="phone" placeholder="Số điện thoại">
+                <input type="text" class="form-control" name="phone" value="{{old('phone')}}" placeholder="Số điện thoại">
                 <span class="glyphicon glyphicon-phone form-control-feedback"></span>
                 <p class="text-danger">{{$errors->first('phone')}}</p>
             </div>

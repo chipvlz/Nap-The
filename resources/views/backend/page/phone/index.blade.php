@@ -63,8 +63,9 @@
                         </div>
                         <!-- /.box-body -->
 
-                        <div class="box-footer text-right">
-                            <button type="button" class="btn btn-primary" id="btn-search">Lọc dữ liệu</button>
+                        <div class="box-footer">
+                            <a href="#" class="btn btn-primary">Thêm mới</a>
+                            <button type="button" class="btn btn-success text-right" style="float: right !important;" id="btn-search">Lọc dữ liệu</button>
                         </div>
                     </form>
                 </div>
@@ -89,7 +90,7 @@
                                 <th>Trạng thái</th>
                                 <th>Người Thêm</th>
                                 <th>Ngày Thêm</th>
-                                <th>action</th>
+                                <th width="100px" class="text-center">action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -228,7 +229,7 @@
                     "className":"text-left",
                     orderable: false,
                     "render":function (data) {
-                        var result=`<button class="btn btn-success btn-sm">Nạp</button>
+                        var result=`
                             <button class="btn btn-danger btn-sm">Dừng</button>
                             <button class="btn btn-warning btn-sm">Log</button> `;
                         return result;

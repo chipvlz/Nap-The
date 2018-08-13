@@ -22,10 +22,11 @@ Route::post('/',[
  */
 
 Route::get('/bao-cao',[
-    'as' => 'home.add',
+    'as' => 'home.index',
     'uses' => 'Backend\HomeController@index'
 ]);
 
+//route phone
 Route::get('/nhap-so-dien-thoai',[
     'as' => 'phone.add',
     'uses' => 'Backend\PhoneController@index'
@@ -46,4 +47,18 @@ Route::post('/upload-file',[
 Route::post('/nhap-sim',[
     'as' => 'phone.sim',
     'uses' => 'Backend\PhoneController@processEnterPhone'
+]);
+
+//route user
+Route::get('/doi-mat-khau',[
+    'as' => 'user.reset-password',
+    'uses' => 'Backend\UserController@resetPassword'
+]);
+Route::post('/doi-mat-khau',[
+    'as' => 'user.post-reset-password',
+    'uses' => 'Backend\UserController@processResetPassword'
+]);
+Route::get('/thong-tin-ca-nhan',[
+    'as' => 'user.profile',
+    'uses' => 'Backend\UserController@profile'
 ]);

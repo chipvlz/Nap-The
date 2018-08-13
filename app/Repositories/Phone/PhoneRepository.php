@@ -1,7 +1,7 @@
 <?php
 namespace  App\Repositories\Phone;
 
-use App\Modes\Phone;
+use App\Models\Phone;
 
 class PhoneRepository implements  PhoneRepositoryInterface
 {
