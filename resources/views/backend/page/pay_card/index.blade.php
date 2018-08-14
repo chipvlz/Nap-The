@@ -1,6 +1,13 @@
 @extends('backend.layouts.master')
 @section('link')
     <link rel="stylesheet" href="{{asset('backend/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
+    <style>
+        div.dt-buttons {
+            position: relative;
+            float: right;
+        }
+    </style>
 @stop
 @section('content')
     <section class="content">
@@ -32,21 +39,10 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="date-to">Loại sim</label>
-                                        <select name="type" id="type" class="form-control">
-                                            <option value="999">Tất cả</option>
-                                            @foreach(config('constant.phone_type') as $k=>$v)
-                                                <option value="{{$k}}">{{$v}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
                                         <label for="date-to">Trạng thái</label>
                                         <select name="status" id="status" class="form-control">
                                             <option value="999">Tất cả</option>
-                                            @foreach(config('constant.status') as $k=>$v)
+                                            @foreach(config('constant.pay_status') as $k=>$v)
                                                 <option value="{{$k}}">{{$v}}</option>
                                             @endforeach
                                         </select>
@@ -64,7 +60,6 @@
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <a href="{{URL::route('phone.add')}}" class="btn btn-primary">Thêm mới</a>
                             <button type="button" class="btn btn-success text-right" style="float: right !important;" id="btn-search">Lọc dữ liệu</button>
                         </div>
                     </form>
@@ -75,7 +70,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Danh sách đơn hàng</h3>
+                        <h3 class="box-title">Danh sách log chi tiết nạp thẻ</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -84,23 +79,25 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Số Điện Thoại</th>
-                                <th>Loại Sim</th>
-                                <th>Số Tiền Cần Nạp</th>
-                                <th>Số Tiền Đã Nạp</th>
+                                <th>Mã số thẻ</th>
+                                <th>Seri thẻ</th>
+                                <th>Mệnh giá từ người nạp</th>
+                                <th>Mệnh giá từ nhà mạng</th>
                                 <th>Trạng thái</th>
-                                <th>Người Thêm</th>
-                                <th>Ngày Thêm</th>
-                                <th width="100px" class="text-center">action</th>
+                                <th>Ngày nạp</th>
                             </tr>
                             </thead>
                             <tbody>
 
                             </tbody>
-                            <tfoot style="background: #00caff">
-                            <th colspan="3" class="text-left">Tổng</th>
-                            <th id="total-money"></th>
-                            <th id="total-money-change"></th>
-                            <th colspan="4"></th>
+                            <tfoot>
+                            <thead>
+                            <tr>
+                                <th colspan="4" style="padding-left: 30px">Tổng</th>
+                                <th class="text-center" id="total-money-request">0</th>
+                                <th class="text-center" id="total-money-response">0</th>
+                                <th colspan="2" id="sub-money"></th>
+                            </tr>
                             </tfoot>
                         </table>
                     </div>
@@ -112,6 +109,14 @@
 @section('script')
     <script src="{{asset('backend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('backend/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+    {{--button--}}
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script src=" https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
     <script >
         $.ajaxSetup({
             headers: {
@@ -136,7 +141,33 @@
             pagingType: "full_numbers",
             ordering:true,
             info:false,
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '<i class="fa fa-file-excel-o fa-lg" aria-hidden="true"></i> Export excel',
+                    className:'btn btn-success',
+                    title:'Thống kê',
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5,6,7]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i> Export pdf',
+                    className:'btn btn-success',
+                    title:'Thống kê',
+                    customize: function (doc) {
+                        doc.defaultStyle.alignment = 'center';
+                        doc.content[1].table.widths =
+                            Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                    }
+                } ,
+                {
+                    extend: 'print',
+                    text: '<i class="fa fa-print" aria-hidden="true"></i> Print',
+                }
+            ],
             language: {
                 "paginate": {
                     "first":"Đầu",
@@ -152,10 +183,13 @@
                 processing: "<div id='divloader'></div>",
             },
             //responsive: true,
+            info:false,
             searching: false,
-            lengthMenu: [[10, 20,50, 100, 200], [10, 20,50, 100, 200]],
+            lengthMenu: [[10, 20,50, 100, 200, -1], [10, 20,50, 100, 200, "ALL"]],
+            serverSide: true,
+            processing: true,
             ajax: {
-                url: '{{URL::route('phone.post-index')}}',
+                url: '{{URL::route('pay-card.report')}}',
                 type: 'POST',
                 beforeSend:function(){
                 },
@@ -163,14 +197,13 @@
                     d._token = '{{csrf_token()}}';
                     d.dateFrom = $('#date-from').val();
                     d.dateTo = $('#date-to').val();
-                    d.type = $('#type option:selected').val();
                     d.status = $('#status option:selected').val();
                     d.phone = $('#phone').val();
                 },
-                dataSrc:"data",
                 complete: function (data) {
-                    $('#total-money').html(data.responseJSON.total.money_total)
-                    $('#total-money-change').html(data.responseJSON.total.money_total_change)
+                    $('#total-money-request').html(accounting.formatNumber(data.responseJSON.total_money_request));
+                    $('#total-money-response').html(accounting.formatNumber(data.responseJSON.total_money_response));
+                    $('#sub-money').html('Tổng tiền nạp sai mệnh giá: <b class="text-danger">'+accounting.formatNumber(data.responseJSON.total_money_request-data.responseJSON.total_money_response)+'</b>')
                 },
                 error: function (xhr, error, thrown) {
                     $("#divloader").hide();
@@ -186,74 +219,66 @@
                     "className":"text-center"
                 },
                 {
-                    "data": "phone_name" ,
+                    "data": "phone" ,
                     "name": "phone",
                     "className":"text-center",
                     "render":function (data) {
-                        return `<b>`+data+`</b>`;
+                        return '<b class="text-primary">'+'0'+accounting.formatNumber(data,',')+'</b>';
                     }
                 },
+
                 {
-                    "data": "phone_type" ,
-                    "name": "type",
-                    "className":"text-center"
+                    "data": "card_code" ,
+                    "name": "card_code",
+                    "className":"text-left"
                 },
+
                 {
-                    "data": "money" ,
-                    "name": "money",
+                    "data": "card_seri" ,
+                    "name": "card_seri",
+                    "className":"text-left"
+                },
+
+                {
+                    "data": "money_request" ,
+                    "name": "money_request",
                     "className":"text-center",
                     "render":function (data) {
-                        return `<b class="text-success">`+data+`</b>`;
+                        return '<b class="text-success">'+accounting.formatNumber(data)+'</b>';
                     }
                 },
+
                 {
-                    "data": "money_change" ,
-                    "name": "money_change",
+                    "data": "money_response" ,
+                    "name": "money_response",
                     "className":"text-center",
                     "render":function (data) {
-                        return `<b class="text-danger">`+data+`</b>`;
+                        return '<b class="text-danger">'+accounting.formatNumber(data)+'</b>';
                     }
                 },
+
                 {
                     "data": "status" ,
                     "name": "status",
                     "className":"text-center",
                     "render":function (data) {
-                        return `<b class="text-purple">`+data+`</b>`;
+                        var result='';
+                        if (data==0) {
+                            result='<span class="btn btn-danger btn-xs">Nạp sai mệnh giá</span>';
+                        } else if(data==1) {
+                            result='<span class="btn btn-success btn-xs">Nạp thành công</span>';
+                        }
+                        return result;
                     }
                 },
-                {
-                    "data": "created_user" ,
-                    "name": "created_user",
-                    "className":"text-center"
-                },
+
                 {
                     "data": "created_at" ,
                     "name": "created_at",
-                    "className":"text-left"
+                    "className":"text-center"
                 },
-                {
-                    "data":{
-                        'id':'id',
-                        'status_key':'status_key',
-                        'phone':'phone'
-                    } ,
-                    "name": "action",
-                    "className":"text-left",
-                    "width":"105px",
-                    orderable: false,
-                    "render":function (data) {
-                        var result=``;
-                        if(data.status_key!=-1) {
-                            result += `<button class="btn btn-danger btn-sm reject-sim" data-id=` + data.id + ` data-phone=`+data.phone+`>Dừng</button>`
-                        } else if(data.status_key==-1) {
-                            result +=`<button class="btn btn-success btn-sm open-sim" data-id=` + data.id + ` data-phone=`+data.phone+`>Mở nạp</button>`
 
-                        }
-                        result+=` <a href="/log/`+data.phone+`" class="btn btn-warning btn-sm">Log</a>`;
-                        return result;
-                    }
-                }
+
             ],
             drawCallback : function() {
                 if($('#phone-list tbody .dataTables_empty').length){
@@ -264,63 +289,10 @@
             },
             deferRender: true,
         } );
-        
+
         $(document).on('click', '#btn-search', function () {
             tableListPhone.ajax.reload();
         })
-
-        $(document).on('click', '.reject-sim', function () {
-            var id = $(this).data('id');
-            var phone =$(this).data('phone');
-            var check = confirm("Bạn có muốn dừng nạp SĐT:"+phone+" không?");
-            if (check == true) {
-                $.ajax({
-                    url: '{{URL::route('phone.reject-sim')}}',
-                    type: 'post',
-                    data: {
-                        id: id
-                    },
-                    success: function (result) {
-                        if (result.status == 1) {
-                            alert(result.message);
-                            tableListPhone.ajax.reload();
-                        } else if (result.status == 0) {
-                            alert(result.message);
-                        }
-                    },
-                    error: function (error) {
-
-                    }
-                })
-            }
-        })
-        //open sim
-        $(document).on('click', '.open-sim', function () {
-            var id = $(this).data('id');
-            var phone =$(this).data('phone');
-            var check = confirm("Bạn có muốn tiếp tục nạp SĐT:"+phone+" không?");
-            if (check == true) {
-                $.ajax({
-                    url: '{{URL::route('phone.open-sim')}}',
-                    type: 'post',
-                    data: {
-                        id: id
-                    },
-                    success: function (result) {
-                        if (result.status == 1) {
-                            alert(result.message);
-                            tableListPhone.ajax.reload();
-                        } else if (result.status == 0) {
-                            alert(result.message);
-                        }
-                    },
-                    error: function (error) {
-
-                    }
-                })
-            }
-        })
-
 
     </script>
 @stop

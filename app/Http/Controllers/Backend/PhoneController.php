@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Models\PayCard;
+use App\Repositories\PayCard\PayCardRepositoryInterface;
 use App\Repositories\Phone\PhoneRepositoryInterface;
 use App\Support\Helper;
 use Illuminate\Http\Request;
@@ -11,9 +13,10 @@ use App\Http\Controllers\Controller;
 
 class PhoneController extends Controller
 {
-    public  function  __construct(PhoneRepositoryInterface $phone)
+    public  function  __construct(PhoneRepositoryInterface $phone, PayCardRepositoryInterface $payCard)
     {
         $this->phone = $phone;
+        $this->payCard = $payCard;
     }
 
     public function  index()
@@ -28,7 +31,20 @@ class PhoneController extends Controller
             $file = $request->file;
             $file->move($dir, $file->getClientOriginalName());
             $pathFile = $dir.'/'.$file->getClientOriginalName();
-            dd(Helper::loadFile($pathFile)->get());
+            $dataReadFile = Helper::loadFile($pathFile)->get();
+          foreach ($dataReadFile as $item) {
+             foreach ($item as $row) {
+                 $data = [
+                     'phone' => $row['so_dien_thoai'],
+                     'type' => $row['loai_thue_bao'],
+                     'money' => (int)$row['so_tien_can_nap'],
+                     'status' => 0,
+                     'created_user' => \Auth::user()->name
+                 ];
+                 $this->phone->save($data);
+             }
+          }
+            return redirect()->route('phone.index')->with('success', 'upload số điện thoại thành công!');
         }
     }
 
@@ -47,12 +63,9 @@ class PhoneController extends Controller
                     'status' => 0,
                     'created_user' => \Auth::user()->name
                 ];
-                if ($this->phone->save($data)) {
-                    return redirect()->route('phone.index')->with('success', 'Thêm mới thành công!');
-                } else {
-                    return redirect()->back()->withErrors('Lỗi trong quá trình xử lý!');
-                }
+                $this->phone->save($data);
             }
+            return redirect()->route('phone.index')->with('success', 'Thêm mới thành công!');
         } else {
             return redirect()->back()->withErrors('Vui lòng nhập danh sách số điện thoại!');
         }
@@ -82,6 +95,7 @@ class PhoneController extends Controller
                $aaRow['phone_name']=Helper::formatPhoneNumber($item->phone);
                $aaRow['phone_type'] =config('constant.phone_type')[$item->type];
                $aaRow['status'] =config('constant.status')[$item->status];
+               $aaRow['status_key'] =$item->status;
                $aaRow['money']=number_format($item->money);
                $aaRow['money_change']=number_format($item->money_change);
                $data[]=$aaRow;
@@ -96,5 +110,48 @@ class PhoneController extends Controller
 
             ]);
 
+    }
+
+    public function  rejectSim(Request $request)
+    {
+        $id = $request->get('id',0);
+        $param['status']=-1;
+        $response = [];
+        if ($this->phone->update($id, $param)) {
+            $response['status']=1;
+            $response['message']='Dừng nạp  thành công!';
+        } else {
+            $response['status']=0;
+            $response['message']='Lỗi xử lý !';
+        }
+        return response()->json($response);
+    }
+    public function  openSim(Request $request)
+    {
+        $id = $request->get('id',0);
+        $phoneFind = $this->phone->find($id);
+        $money = (int)$phoneFind->money - (int)$phoneFind->money_change;
+        if ($money==0) {
+            $param['status']=2;
+        } else if ($money>0) {
+            $param['status']=1;
+        } else if ($money==(int)$phoneFind->money) {
+            $param['status']=0;
+        }
+        $response = [];
+        if ($this->phone->update($id, $param)) {
+            $response['status']=1;
+            $response['message']='Mở nạp thành công!';
+        } else {
+            $response['status']=0;
+            $response['message']='Lỗi xử lý !';
+        }
+        return response()->json($response);
+    }
+
+    public function  logOrder($phone)
+    {
+        $dataLog = $this->payCard->findAttribute('phone', $phone);
+        return view('backend.page.phone.log', compact('phone','dataLog'));
     }
 }

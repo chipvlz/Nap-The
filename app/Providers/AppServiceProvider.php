@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $repositories = [
             'Phone\PhoneRepositoryInterface' => 'Phone\PhoneRepository',
+            'PayCard\PayCardRepositoryInterface' => 'PayCard\PayCardRepository',
             'User\UserRepositoryInterface' => 'User\UserRepository',
         ];
         foreach ($repositories as $key=>$val){

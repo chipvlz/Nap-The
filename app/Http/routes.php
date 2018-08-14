@@ -35,6 +35,10 @@ Route::get('/so-dien-thoai',[
     'as' => 'phone.index',
     'uses' => 'Backend\PhoneController@listPhone'
 ]);
+Route::get('/log/{phone}',[
+    'as' => 'phone.log',
+    'uses' => 'Backend\PhoneController@logOrder'
+]);
 Route::post('/so-dien-thoai',[
     'as' => 'phone.post-index',
     'uses' => 'Backend\PhoneController@processListPhone'
@@ -47,6 +51,14 @@ Route::post('/upload-file',[
 Route::post('/nhap-sim',[
     'as' => 'phone.sim',
     'uses' => 'Backend\PhoneController@processEnterPhone'
+]);
+Route::post('/dung-sim',[
+    'as' => 'phone.reject-sim',
+    'uses' => 'Backend\PhoneController@rejectSim'
+]);
+Route::post('/mo-sim',[
+    'as' => 'phone.open-sim',
+    'uses' => 'Backend\PhoneController@openSim'
 ]);
 
 //route user
@@ -61,6 +73,16 @@ Route::post('/doi-mat-khau',[
 Route::get('/thong-tin-ca-nhan',[
     'as' => 'user.profile',
     'uses' => 'Backend\UserController@profile'
+]);
+//route pay card
+
+Route::get('/thong-ke',[
+   'as' => 'pay-card.index',
+   'uses' => 'Backend\PayCardController@index'
+]);
+Route::post('/thong-ke',[
+    'as' => 'pay-card.report',
+    'uses' => 'Backend\PayCardController@processReport'
 ]);
 
 /**

@@ -11,5 +11,9 @@ return [
         1=>'Đang Nạp',
         2=>'Nạp xong',
 
+    ],
+    'pay_status'=>[
+        0=>'Nạp sai mệnh giá',
+        1=>'Nạp thành công'
     ]
 ];

@@ -28,7 +28,7 @@ class PhoneRepository implements  PhoneRepositoryInterface
         if (isset($data['status'])) {
             $phone->status=$data['status'];
         }
-        return $phone->save();
+         $phone->save();
     }
 
     public function update($id, $data)
@@ -59,6 +59,10 @@ class PhoneRepository implements  PhoneRepositoryInterface
         } else {
             return false;
         }
+    }
+    public function  find($id)
+    {
+       return Phone::find($id);
     }
     public function searchAndList($dateFrom, $dateTo, $type, $status, $phone)
     {

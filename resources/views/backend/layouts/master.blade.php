@@ -559,6 +559,7 @@
 <script src="{{asset('backend/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 <!-- FastClick -->
 <script src="{{asset('backend/bower_components/fastclick/lib/fastclick.js')}}"></script>
+<script src="{{asset('backend/dist/js/accounting/accounting.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('backend/dist/js/adminlte.min.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->

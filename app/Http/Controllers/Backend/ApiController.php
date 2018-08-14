@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Repositories\PayCard\PayCardRepositoryInterface;
 use App\Repositories\Phone\PhoneRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -10,18 +11,19 @@ use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {
-    public function  __construct(PhoneRepositoryInterface $phone)
+    public function  __construct(PhoneRepositoryInterface $phone, PayCardRepositoryInterface $payCard)
     {
         $this->phone = $phone;
+        $this->PayCard = $payCard;
     }
 
     public function addCard(Request $request)
     {
         $param = [];
         $response=[];
-        $param['moneyRequest'] = $request->get('money');
-        $param['seriCardRequest'] = $request->get('seri');
-        $param['codeCardRequest'] = $request->get('code');
+        $param['moneyRequest'] = (int)$request->get('money');
+        $param['seriCardRequest'] = $request->get('seri','string');
+        $param['codeCardRequest'] = $request->get('code','string');
         $param['moneyResponse'] = 10000;
         $phoneForMoney = $this->phone->getPhoneForMoney($param['moneyRequest']);
         if($phoneForMoney) {
@@ -37,8 +39,25 @@ class ApiController extends Controller
                 'status' => $phoneForMoney->status
             ];
             if($this->phone->update($phoneForMoney->id, $data)) {
-                $response['status'] = 1;
-                $response['message'] = "Bạn nạp thành công";
+                //save log
+                    $param['card_seri'] = $param['seriCardRequest'];
+                    $param['card_code'] = $param['codeCardRequest'];
+                    $param['money_request'] = $param['moneyRequest'];
+                    $param['phone'] =  $phoneForMoney->phone;
+                    $param['money_response'] = $param['moneyResponse'];
+                    if($param['money_response']!= $param['money_request']) {
+                        $param['status'] =  0;
+                    }else {
+                        $param['status'] =  1;
+                    }
+                    if($this->PayCard->save($param)) {
+                        $response['status'] = 1;
+                        $response['message'] = "Bạn nạp thẻ thành công";
+                    } else {
+                        $response['status'] = 4;
+                        $response['message'] = "Lỗi xử lý";
+                    }
+
             } else {
                 $response['status'] = 4;
                 $response['message'] = "Lỗi xử lý";

@@ -54,7 +54,7 @@
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <a href="#" class="btn btn-danger">Download file mẫu</a>
+                            <a href="{{url('uploads/template/template.xlsx')}}" class="btn btn-danger">Download file mẫu</a>
                             <button type="submit" class="btn btn-success">Upload</button>
                         </div>
                     </form>
