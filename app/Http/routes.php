@@ -62,3 +62,14 @@ Route::get('/thong-tin-ca-nhan',[
     'as' => 'user.profile',
     'uses' => 'Backend\UserController@profile'
 ]);
+
+/**
+ * ----------------API----------------------------
+ */
+
+Route::group(['prefix' => '/api/v1'], function () {
+    Route::get('/nap-the',[
+        'as' => 'api.add-card',
+        'uses' => 'Backend\ApiController@addCard'
+    ]);
+});
