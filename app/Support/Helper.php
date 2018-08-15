@@ -43,5 +43,31 @@ class Helper
 
         return $phoneNumber;
     }
+
+    // call api vinaphone
+    public static function payCard($pin, $tel)
+    {
+        $postinfo = json_encode(array("card_id"=>$pin, "msisdn"=>$tel));
+        $URL = 'https://api-myvnpt.vnpt.vn/mapi/services/mobile_payment_recharge';
+        $ch = curl_init($URL);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postinfo);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
+        $ret = curl_exec($ch);
+        curl_close($ch);
+        return json_decode($ret,true);
+    }
+
+    public static function get_string_between($string, $start, $end)
+    {
+        $string = " " . $string;
+        $ini = strpos($string, $start);
+        if ($ini == 0) return "";
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return substr($string, $ini, $len);
+    }
 }
 ?>

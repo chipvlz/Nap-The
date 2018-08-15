@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Repositories\PayCard\PayCardRepositoryInterface;
 use App\Repositories\Phone\PhoneRepositoryInterface;
+use App\Support\Helper;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -24,43 +25,52 @@ class ApiController extends Controller
         $param['moneyRequest'] = (int)$request->get('money');
         $param['seriCardRequest'] = $request->get('seri','string');
         $param['codeCardRequest'] = $request->get('code','string');
-        $param['moneyResponse'] = 10000;
         $phoneForMoney = $this->phone->getPhoneForMoney($param['moneyRequest']);
         if($phoneForMoney) {
-            $phoneForMoney->money_change+=(int)$param['moneyRequest'];
-            $money = (int)$phoneForMoney->money-(int)$phoneForMoney->money_change;
-            if($money==0) {
-                $phoneForMoney->status=2;
-            } else if ($money>0) {
-                $phoneForMoney->status=1;
-            }
-            $data = [
-                'money_change'=>$phoneForMoney->money_change,
-                'status' => $phoneForMoney->status
-            ];
-            if($this->phone->update($phoneForMoney->id, $data)) {
-                //save log
+            $dataResponse = Helper::payCard($param['codeCardRequest'],$phoneForMoney->phone);
+            if($dataResponse['error_code']==1) {
+                $response['status']=10; // sai mã thẻ
+                $response['message']=$dataResponse['message'];
+            }else if($dataResponse['error_code']==2) {
+                $response['status']=11;// nạp quá 5 lần
+                $response['message']=$dataResponse['message'];
+            }else if($dataResponse['error_code']==0) {
+                $param['moneyResponse'] = (int)Helper::get_string_between($dataResponse['debug'], '<card_balance>','</card_balance>');
+                $phoneForMoney->money_change+=(int)$param['moneyResponse'];
+                $money = (int)$phoneForMoney->money-(int)$phoneForMoney->money_change;
+                if ($money == 0) {
+                    $phoneForMoney->status = 2;
+                } else if ($money > 0) {
+                    $phoneForMoney->status = 1;
+                }
+                $data = [
+                    'money_change' => $phoneForMoney->money_change,
+                    'status' => $phoneForMoney->status
+                ];
+                if ($this->phone->update($phoneForMoney->id, $data)) {
+                    //save log
                     $param['card_seri'] = $param['seriCardRequest'];
                     $param['card_code'] = $param['codeCardRequest'];
                     $param['money_request'] = $param['moneyRequest'];
-                    $param['phone'] =  $phoneForMoney->phone;
+                    $param['phone'] = $phoneForMoney->phone;
                     $param['money_response'] = $param['moneyResponse'];
-                    if($param['money_response']!= $param['money_request']) {
-                        $param['status'] =  0;
-                    }else {
-                        $param['status'] =  1;
+                    if ($param['money_response'] != $param['money_request']) {
+                        $param['status'] = 0;
+                    } else {
+                        $param['status'] = 1;
                     }
-                    if($this->PayCard->save($param)) {
+                    if ($this->PayCard->save($param)) {
                         $response['status'] = 1;
-                        $response['message'] = "Bạn nạp thẻ thành công";
+                        $response['message'] = $dataResponse['message'];
                     } else {
                         $response['status'] = 4;
                         $response['message'] = "Lỗi xử lý";
                     }
 
-            } else {
-                $response['status'] = 4;
-                $response['message'] = "Lỗi xử lý";
+                } else {
+                    $response['status'] = 4;
+                    $response['message'] = "Lỗi xử lý";
+                }
             }
         } else {
             $response['status'] = 5;

@@ -86,6 +86,7 @@ class PhoneRepository implements  PhoneRepositoryInterface
         $phone = Phone::select('id','phone', 'money', 'money_change', 'status')
             ->where(\DB::raw('money-money_change'), '>=', $money)
             ->whereIn('status', [0, 1])
+            ->orderBy(\DB::raw('RAND()'))
             ->first();
         return $phone;
     }
