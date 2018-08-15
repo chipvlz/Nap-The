@@ -69,4 +69,11 @@ class PayCardRepository implements  PayCardRepositoryInterface
             'record' => $query->take(1000)->orderBy($column, $sort)->skip($start)->take($length)->get()
         ];
     }
+
+    public function  countPayCardInDateNow($date)
+    {
+        return PayCard::select(\DB::raw('count(id) as count_order, sum(if(status=0,1,0)) as log_false,sum(if(status=1,1,0)) as log_true'))
+                        ->where(\DB::raw('date(`created_at`)'),$date)
+                        ->first();
+    }
 }

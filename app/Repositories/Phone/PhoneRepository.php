@@ -90,6 +90,13 @@ class PhoneRepository implements  PhoneRepositoryInterface
             ->first();
         return $phone;
     }
+
+    public  function  countPhoneNow()
+    {
+        return Phone::select(\DB::raw('count(id) as count_phone, sum(if(status=0,1,0)) as phone_new,
+                sum(if(status=1,1,0)) as phone_start, sum(if(status=2,1,0)) as phone_success,sum(if(status=-1,1,0)) as phone_stop'))
+            ->first();
+    }
 }
 
 ?>

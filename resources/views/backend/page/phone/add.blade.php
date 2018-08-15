@@ -1,4 +1,7 @@
 @extends('backend.layouts.master')
+@section('title')
+    Nhập Số Điện Thoại
+@stop
 @section('content')
     <section class="content">
 

@@ -1,4 +1,7 @@
 @extends('backend.layouts.master')
+@section('title')
+    Log Nạp Thẻ Theo Sim
+@stop
 @section('link')
     <link rel="stylesheet" href="{{asset('backend/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
 @stop

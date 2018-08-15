@@ -133,10 +133,10 @@ class PhoneController extends Controller
         $money = (int)$phoneFind->money - (int)$phoneFind->money_change;
         if ($money==0) {
             $param['status']=2;
-        } else if ($money>0) {
-            $param['status']=1;
         } else if ($money==(int)$phoneFind->money) {
             $param['status']=0;
+        } else if ($money>0) {
+            $param['status']=1;
         }
         $response = [];
         if ($this->phone->update($id, $param)) {

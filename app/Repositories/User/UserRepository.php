@@ -51,5 +51,9 @@ class UserRepository implements  UserRepositoryInterface
     {
 
     }
+    public function countUser()
+    {
+        return User::count();
+    }
 
 }

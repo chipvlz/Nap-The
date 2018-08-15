@@ -14,6 +14,8 @@ interface  PayCardRepositoryInterface
     public function findAttribute($att, $val);
 
     public function searchAndList($dateFrom, $dateTo,$status, $phone, $start, $length, $column, $sort);
+
+    public function  countPayCardInDateNow($date);
 }
 
 
