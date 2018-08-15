@@ -15,6 +15,11 @@ class UserController extends Controller
         $this->user = $user;
     }
 
+    public function  index()
+    {
+        $dataUser = $this->user->all();
+        return view('backend.page.user.index', compact('dataUser'));
+    }
     public function  resetPassword()
     {
         return view('backend.page.user.reset_password');

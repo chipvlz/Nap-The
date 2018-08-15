@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -10,7 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    //
+
+    public  function __construct(UserRepositoryInterface $user)
+    {
+        $this->user = $user;
+
+    }
 
     public function  login()
     {
@@ -32,5 +38,18 @@ class AuthController extends Controller
     {
         Auth::logout();
         return redirect()->route('auth.login');
+    }
+
+    public function processForgetPassword(Request $request)
+    {
+        $email = $request->get('email');
+        $response=[];
+        $checkExistEmail = $this->user->findAbtribute('email', $email);
+        if($checkExistEmail) {
+
+        } else {
+            $response['status']=0;
+            $response['message']="Email không có trong hệ thống !";
+        }
     }
 }

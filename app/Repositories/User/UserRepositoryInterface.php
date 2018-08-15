@@ -12,5 +12,7 @@ interface  UserRepositoryInterface
     public function delete($id);
 
     public function countUser();
+
+    public  function  findAbtribute($att, $val);
 }
 ?>

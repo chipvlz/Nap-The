@@ -70,10 +70,37 @@
         </form>
         <!-- /.social-auth-links -->
 
-        <a href="#">Quên mật khẩu</a><br>
+        <a href="" data-toggle="modal" data-target="#forgetModal">Quên mật khẩu</a><br>
 
     </div>
     <!-- /.login-box-body -->
+</div>
+<div id="forgetModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <form action="{{URL::route('auth.forget')}}" method="post" id="form-forget">
+            {{csrf_field()}}
+        <div class="modal-content" style="width: 70%;margin: 0 auto;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">QUÊN MẬT KHẨU</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group has-feedback " id="error-class">
+                    <input type="email" id="forget-mail" name="email" class="form-control" placeholder="Email">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+                <p class="text-danger" id="show-error"></p>
+                <p id="forget-info">Để đặt lại mật khẩu của mình, hãy nhập địa chỉ email mà bạn sử dụng để đăng nhập vào hệ thống.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" id="send-email"><i class="fa fa-send-o"></i> GỬI</button>
+            </div>
+        </div>
+        </form>>
+
+    </div>
 </div>
 <!-- /.login-box -->
 
@@ -90,7 +117,40 @@
             radioClass: 'iradio_square-blue',
             increaseArea: '20%' /* optional */
         });
+
+
+        //send email
+        $(document).on('click', '#send-email', function () {
+
+
+        })
+        $('#form-forget').submit(function (e) {
+
+            e.preventDefault();
+            var mail = $('#forget-mail').val();
+            if(mail=='') {
+                $('#show-error').html('Bạn chưa nhập email');
+                $('#error-class').addClass('has-error');
+                $('#forget-info').hide();
+                return;
+            } else {
+                $.ajax({
+                    type: $('#form-forget').attr('method'),
+                    url: $('#form-forget').attr('action'),
+                    data: $('#form-forget').serialize(),
+                    success: function (data) {
+                        console.log('Submission was successful.');
+                        console.log(data);
+                    },
+                    error: function (data) {
+                        console.log('An error occurred.');
+                        console.log(data);
+                    },
+                });
+            }
+        });
     });
+
 </script>
 </body>
 </html>

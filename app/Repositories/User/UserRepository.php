@@ -8,7 +8,7 @@ class UserRepository implements  UserRepositoryInterface
 {
     public function all()
     {
-
+        return User::all();
     }
     public function save($data)
     {
@@ -54,6 +54,11 @@ class UserRepository implements  UserRepositoryInterface
     public function countUser()
     {
         return User::count();
+    }
+
+    public  function  findAbtribute($att, $val)
+    {
+        return User::where($att, $val)->first();
     }
 
 }

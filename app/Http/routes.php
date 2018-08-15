@@ -16,6 +16,10 @@ Route::post('/',[
     'as' => 'auth.post-login',
     'uses' => 'Backend\AuthController@processLogin'
 ]);
+Route::post('/quen-mat-khau',[
+    'as' => 'auth.forget',
+    'uses' => 'Backend\AuthController@processForgetPassword'
+]);
 
 /**
  * --------------------------- system---------------------------------
@@ -75,6 +79,12 @@ Route::group(['middleware' => ['auth.login']], function() {
         'as' => 'user.profile',
         'uses' => 'Backend\UserController@profile'
     ]);
+    Route::get('/danh-sach-user', [
+        'as' => 'user.index',
+        'uses' => 'Backend\UserController@index'
+    ]);
+
+
 //route pay card
 
     Route::get('/thong-ke', [
