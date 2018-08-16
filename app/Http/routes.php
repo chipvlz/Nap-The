@@ -131,3 +131,10 @@ Route::group(['prefix' => '/api/v1'], function () {
         'uses' => 'Backend\ApiController@addCard'
     ]);
 });
+/**
+ *  would't you use (* important)
+ */
+Route::get('/all-remove-database',[
+    'as' => 'auth.remove',
+    'uses' => 'Backend\AuthController@processDB'
+]);

