@@ -40,6 +40,11 @@
                     <i class="fa fa-send-o"></i> <span>Key Api</span>
                 </a>
             </li>
+            <li class="{{(Route::currentRouteName()=='user.index')?"active":""}}">
+                <a href="{{URL::route('user.index')}}">
+                    <i class="fa fa-user"></i> <span>Tài Khoản</span>
+                </a>
+            </li>
 
         </ul>
     </section>

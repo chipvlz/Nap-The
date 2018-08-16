@@ -20,7 +20,11 @@ class AuthController extends Controller
 
     public function  login()
     {
-        return view('backend.login');
+        if(\Auth::check()) {
+         return redirect()->route('home.index');
+        } else {
+            return view('backend.login');
+        }
     }
 
     public function  processLogin(Requests\LoginRequest $request)
