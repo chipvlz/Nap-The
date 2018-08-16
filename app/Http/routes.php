@@ -96,10 +96,20 @@ Route::group(['middleware' => ['auth.login']], function() {
         'uses' => 'Backend\PayCardController@processReport'
     ]);
 
-    /**
-     * ----------------API----------------------------
-     */
+    //gen key api
+    Route::get('/key-api',[
+        'as' => 'api.index',
+        'uses' => 'Backend\ApiTokenController@index'
+    ]);
+    Route::get('/tao-key-api',[
+        'as' => 'api.token',
+        'uses' => 'Backend\ApiTokenController@generateKey'
+    ]);
+
 });
+/**
+ * ----------------API----------------------------
+ */
 Route::group(['prefix' => '/api/v1'], function () {
     Route::get('/nap-the',[
         'as' => 'api.add-card',

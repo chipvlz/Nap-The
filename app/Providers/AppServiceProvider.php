@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
             'PayCard\PayCardRepositoryInterface' => 'PayCard\PayCardRepository',
             'User\UserRepositoryInterface' => 'User\UserRepository',
             'Email\EmailRepositoryInterface' => 'Email\EmailRepository',
+            'ApiToken\ApiTokenRepositoryInterface' => 'ApiToken\ApiTokenRepository',
         ];
         foreach ($repositories as $key=>$val){
             $this->app->bind("App\\Repositories\\$key", "App\\Repositories\\$val");

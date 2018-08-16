@@ -35,6 +35,11 @@
                     <li class="{{(Route::currentRouteName()=='pay-card.index')?"active":""}}"><a href="{{URL::route('pay-card.index')}}"><i class="fa fa-circle-o"></i> Log Giao Dịch</a></li>
                 </ul>
             </li>
+            <li class="{{(Route::currentRouteName()=='api.index')?"active":""}}">
+                <a href="{{URL::route('api.index')}}">
+                    <i class="fa fa-send-o"></i> <span>Key Api</span>
+                </a>
+            </li>
 
         </ul>
     </section>
