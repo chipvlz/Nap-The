@@ -21,7 +21,15 @@ class ApiTokenRepository implements  ApiTokenRepositoryInterface
 
     public function update($id, $data)
     {
-
+        $apiToken = ApiToken::find($id);
+        if ($apiToken) {
+            if (isset($data['active'])) {
+                $apiToken->active = $data['active'];
+            }
+            return $apiToken->save();
+        } else {
+            return false;
+        }
     }
 
     public function delete($id)
@@ -31,6 +39,8 @@ class ApiTokenRepository implements  ApiTokenRepositoryInterface
 
     public function  findAttribute($att, $val)
     {
-        return ApiToken::where($att, $val)->first();
+        return ApiToken::where($att, $val)
+            ->where('active',1)
+            ->first();
     }
 }

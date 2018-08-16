@@ -19,9 +19,20 @@ class UserRepository implements  UserRepositoryInterface
         if (isset($data['fullname'])) {
             $user->fullname = $data['fullname'];
         }
+        if (isset($data['email'])) {
+            $user->email = $data['email'];
+        }
+        if (isset($data['phone'])) {
+            $user->phone = $data['phone'];
+        }
+        if (isset($data['image'])) {
+            $user->image = $data['image'];
+        }
         if (isset($data['password'])) {
             $user->password = bcrypt($data['password']);
         }
+
+        return $user->save();
 
 
     }
@@ -49,7 +60,12 @@ class UserRepository implements  UserRepositoryInterface
 
     public function delete($id)
     {
-
+        $user =  User::find($id);
+        if ($user) {
+            return $user->delete();
+        } else {
+            return false;
+        }
     }
     public function countUser()
     {

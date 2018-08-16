@@ -83,8 +83,18 @@ Route::group(['middleware' => ['auth.login']], function() {
         'as' => 'user.index',
         'uses' => 'Backend\UserController@index'
     ]);
-
-
+    Route::get('/them-user', [
+        'as' => 'user.add',
+        'uses' => 'Backend\UserController@addUser'
+    ]);
+    Route::get('/xoa-user/{id}', [
+        'as' => 'user.delete',
+        'uses' => 'Backend\UserController@delete'
+    ]);
+    Route::post('/them-user', [
+        'as' => 'user.post-add',
+        'uses' => 'Backend\UserController@processAddUser'
+    ]);
 //route pay card
 
     Route::get('/thong-ke', [
@@ -105,6 +115,11 @@ Route::group(['middleware' => ['auth.login']], function() {
         'as' => 'api.token',
         'uses' => 'Backend\ApiTokenController@generateKey'
     ]);
+
+     Route::post('/cap-nhat-key-api',[
+         'as' => 'api.stop-start',
+         'uses' => 'Backend\ApiTokenController@stopAndOpenApi'
+     ]);
 
 });
 /**

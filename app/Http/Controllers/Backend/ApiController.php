@@ -7,7 +7,6 @@ use App\Repositories\PayCard\PayCardRepositoryInterface;
 use App\Repositories\Phone\PhoneRepositoryInterface;
 use App\Support\Helper;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -86,7 +85,7 @@ class ApiController extends Controller
             }
         } else {
             $response['status'] = 12;
-            $response['message'] = "Key Api không đúng";
+            $response['message'] = "Key Api không đúng hoặc đã bị khóa";
         }
         return response()->json($response);
     }

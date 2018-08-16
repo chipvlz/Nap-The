@@ -29,4 +29,19 @@ class ApiTokenController extends Controller
             return redirect()->back()->withErrors('Lỗi tạo key API!');
         }
     }
+
+    public function stopAndOpenApi(Request $request)
+    {
+        $active = $request->get('active', 'int');
+        $id = $request->get('id', 'int');
+        $response = [];
+        if ($this->apiToken->update($id, ['active'=>$active])) {
+            $response['status']=1;
+            $response['message'] = 'Cập nhật thành công';
+        } else {
+            $response['status']=0;
+            $response['message'] = 'Lỗi xử lý';
+        }
+        return response()->json($response);
+    }
 }

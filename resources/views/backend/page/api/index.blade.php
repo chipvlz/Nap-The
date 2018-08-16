@@ -42,9 +42,12 @@
                                             <span class="btn btn-danger btn-xs"> Ngừng hoạt động</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if($item->active==1)
-                                            <a href="" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Dừng</a>
+                                            <a href="" class="btn btn-danger btn-sm stop-api" data-id="{{$item->id}}"> Dừng</a>
+                                        @elseif($item->active==0)
+                                            <a href="" class="btn btn-success btn-sm open-api" data-id="{{$item->id}}">Mở</a>
+
                                         @endif
                                     </td>
                                 </tr>
@@ -70,7 +73,7 @@
         });
 
         //datatable
-        $('#user-list').DataTable( {
+        var tableApi = $('#user-list').DataTable( {
             pagingType: "full_numbers",
             ordering:true,
             info:false,
@@ -103,7 +106,58 @@
             deferRender: true,
         } );
 
+        $(document).on('click', '.stop-api', function (event) {
+            event.preventDefault();
+            var id = $(this).data('id');
+            var check = confirm("Bạn có muốn tạm dừng key api này không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('api.stop-start')}}',
+                    type: 'post',
+                    data: {
+                        id: id,
+                        active:0
+                    },
+                    success: function (result) {
+                        if (result.status == 1) {
+                            alert(result.message);
+                           window.location.reload();
+                        } else if (result.status == 0) {
+                            alert(result.message);
+                        }
+                    },
+                    error: function (error) {
 
+                    }
+                })
+            }
+        })
+        $(document).on('click', '.open-api', function (event) {
+            event.preventDefault();
+            var id = $(this).data('id');
+            var check = confirm("Bạn có muốn mở lại key api này không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('api.stop-start')}}',
+                    type: 'post',
+                    data: {
+                        id: id,
+                        active:1
+                    },
+                    success: function (result) {
+                        if (result.status == 1) {
+                            alert(result.message);
+                            window.location.reload();
+                        } else if (result.status == 0) {
+                            alert(result.message);
+                        }
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+        })
 
 
     </script>

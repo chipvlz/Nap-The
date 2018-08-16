@@ -4,6 +4,7 @@
 @stop
 @section('link')
     <link rel="stylesheet" href="{{asset('backend/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
+
 @stop
 @section('content')
     <section class="content">
@@ -13,7 +14,7 @@
                     <div class="box-header">
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="#" data-toggle="modal" data-target="#userAddModal" class="btn btn-success">Thêm mới</a>
+                                <a href="{{URL::route('user.add')}}" class="btn btn-success">Thêm mới</a>
                             </div>
                         </div>
                         <br>
@@ -46,9 +47,9 @@
                                     <td>{{$item->email}}</td>
                                     <td>{{$item->fullname}}</td>
                                     <td>{{$item->created_at}}</td>
-                                    <td>
-                                        @if(Auth::user()->id!=1)
-                                            <a href="" class="btn btn-danger"><i class="fa fa-trash-o"></i> Xóa</a>
+                                    <td class="text-center">
+                                        @if($item->id!=1)
+                                            <a href="{{URL::route('user.delete',['id'=>$item->id])}}" onclick="return confirm('Bạn có muốn xóa  user này không?')" class="btn btn-danger"><i class="fa fa-trash-o"></i> Xóa</a>
                                         @endif
                                     </td>
                                 </tr>
@@ -62,60 +63,6 @@
             </div>
         </div>
     </section>
-    <div id="userAddModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="register-box">
-
-                        <div class="register-box-body">
-
-                            <form action="../../index.html" method="post">
-                                <div class="form-group has-feedback">
-                                    <input type="text" class="form-control" placeholder="Full name">
-                                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                                </div>
-                                <div class="form-group has-feedback">
-                                    <input type="email" class="form-control" placeholder="Email">
-                                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                                </div>
-                                <div class="form-group has-feedback">
-                                    <input type="password" class="form-control" placeholder="Password">
-                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                                </div>
-                                <div class="form-group has-feedback">
-                                    <input type="password" class="form-control" placeholder="Retype password">
-                                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
-                                </div>
-                                <div class="row">
-                                    <!-- /.col -->
-                                    <div class="col-xs-4">
-                                        <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
-                                    </div>
-                                    <!-- /.col -->
-                                </div>
-                            </form>
-
-
-                            <a href="login.html" class="text-center">I already have a membership</a>
-                        </div>
-                        <!-- /.form-box -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
 @stop
 @section('script')
     <script src="{{asset('backend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>

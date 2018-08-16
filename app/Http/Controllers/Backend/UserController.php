@@ -25,6 +25,20 @@ class UserController extends Controller
         return view('backend.page.user.reset_password');
     }
 
+    public function  addUser()
+    {
+        return view('backend.page.user.add');
+    }
+
+    public  function processAddUser(Requests\CreateUserRequest $request)
+    {
+        $dataRequest = $request->except('_token');
+        if ($this->user->save($dataRequest)) {
+            return redirect()->route('user.index')->with('success','Thêm mới user thành công!');
+        } else {
+            return redirect()->back()->withErrors('Lỗi thêm mới user!');
+        }
+    }
     public function  processResetPassword(Requests\ResetPasswordRequest $request)
     {
         $dataRequest = $request->except('_token');
@@ -47,5 +61,14 @@ class UserController extends Controller
     public function profile()
     {
         return view('backend.page.user.profile');
+    }
+
+    public function  delete($id)
+    {
+        if ($this->user->delete($id)) {
+            return redirect()->back()->with('success','Xóa user thành công!');
+        } else {
+            return redirect()->back()->withErrors('Lỗi xóa user!');
+        }
     }
 }
