@@ -29,6 +29,9 @@ class PayCardRepository implements  PayCardRepositoryInterface
         if (isset($data['phone'])) {
             $payCard->phone = $data['phone'];
         }
+        if (isset($data['provider'])) {
+            $payCard->provider = $data['provider'];
+        }
         if (isset($data['status'])) {
             $payCard->status = $data['status'];
         }
@@ -51,13 +54,16 @@ class PayCardRepository implements  PayCardRepositoryInterface
         return PayCard::where($att, $val)->get();
     }
 
-    public function searchAndList($dateFrom, $dateTo,$status, $phone, $start, $length,$column, $sort)
+    public function searchAndList($dateFrom, $dateTo,$status, $phone, $provider, $start, $length,$column, $sort)
     {
         $query = PayCard::select('*')
             ->where(\DB::raw('date(`created_at`)'),'>=', $dateFrom)
             ->where(\DB::raw('date(`created_at`)'),'<=', $dateTo);
         if($status!=999) {
             $query->where('status', $status);
+        }
+        if($provider!=999) {
+            $query->where('provider', $provider);
         }
         if(!empty($phone)) {
             $query->where('phone', 'like', '%'.$phone.'%');

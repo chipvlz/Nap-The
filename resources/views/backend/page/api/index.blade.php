@@ -13,7 +13,7 @@
                     <div class="box-header">
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="{{URL::route('api.token')}}" class="btn btn-success"><i class="fa fa-cog" aria-hidden="true"></i> Tạo Key Api</a>
+                                <a data-toggle="modal" data-target="#apiModal" class="btn btn-success"><i class="fa fa-cog" aria-hidden="true"></i> Tạo Key Api</a>
                             </div>
                         </div>
                         <br>
@@ -21,11 +21,13 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <div class="table-responsive">
                         <table id="user-list" class="table table-bordered table-hover" style="width: 100%">
                             <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Key API</th>
+                                <th>Đối tác</th>
                                 <th>Trạng thái</th>
                                 <th width="100px" class="text-center">action</th>
                             </tr>
@@ -35,6 +37,7 @@
                                 <tr>
                                     <td>{{$item->id}}</td>
                                     <td><b>{{$item->token}}</b></td>
+                                    <td><span class=" btn {{($item->active==1)?"btn-success":"btn-danger"}}">{{$item->provider}}</span></td>
                                     <td>
                                         @if ($item->active==1)
                                             <span class="btn btn-success btn-xs"> Đang hoạt động</span>
@@ -56,11 +59,38 @@
 
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <div id="apiModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <form action="{{URL::route('api.token')}}" method="post" id="form-forget">
+                {{csrf_field()}}
+                <div class="modal-content" style="width: 70%;margin: 0 auto;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Nhập tên đối tác</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group has-feedback " id="error-class">
+                            <input type="text" id="api-provider" name="provider" required class="form-control" placeholder="Đối tác (chú ý tên đối tác không dấu và viết liền)">
+                            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        </div>
+                        <p class="text-danger" id="show-error"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="send-email"><i class="fa fa-send-o"></i>Tạo Key API</button>
+                    </div>
+                </div>
+            </form>>
+
+        </div>
+    </div>
 @stop
 @section('script')
     <script src="{{asset('backend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>

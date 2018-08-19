@@ -82,6 +82,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <div class="table-responsive">
                         <table id="phone-list" class="table table-bordered table-hover" style="width: 100%">
                             <thead>
                             <tr>
@@ -106,6 +107,7 @@
                             <th colspan="4"></th>
                             </tfoot>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -284,12 +286,9 @@
                         id: id
                     },
                     success: function (result) {
-                        if (result.status == 1) {
-                            alert(result.message);
+
+                            alert('Dừng nạp sim thành công!');
                             tableListPhone.ajax.reload();
-                        } else if (result.status == 0) {
-                            alert(result.message);
-                        }
                     },
                     error: function (error) {
 
@@ -310,12 +309,8 @@
                         id: id
                     },
                     success: function (result) {
-                        if (result.status == 1) {
-                            alert(result.message);
-                            tableListPhone.ajax.reload();
-                        } else if (result.status == 0) {
-                            alert(result.message);
-                        }
+                        alert('Mở nạp sim thành công!');
+                        tableListPhone.ajax.reload();
                     },
                     error: function (error) {
 

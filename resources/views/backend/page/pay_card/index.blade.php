@@ -53,6 +53,17 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
+                                        <label for="date-to">Đối Tác</label>
+                                        <select name="provider" id="provider" class="form-control">
+                                            <option value="999">Tất cả</option>
+                                            @foreach($dataProvider as $item)
+                                                <option value="{{$item->provider}}">{{$item->provider}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
                                         <label for="date-to">SĐT</label>
                                         <input type="text" class="form-control" name="phone" id="phone" placeholder="số điện thoại">
                                     </div>
@@ -77,6 +88,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <div class="table-responsive">
                         <table id="phone-list" class="table table-bordered table-hover" style="width: 100%">
                             <thead>
                             <tr>
@@ -87,6 +99,7 @@
                                 <th>Mệnh giá từ người nạp</th>
                                 <th>Mệnh giá từ nhà mạng</th>
                                 <th>Trạng thái</th>
+                                <th>Đối Tác</th>
                                 <th>Ngày nạp</th>
                             </tr>
                             </thead>
@@ -103,6 +116,7 @@
                             </tr>
                             </tfoot>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -201,6 +215,7 @@
                     d.dateFrom = $('#date-from').val();
                     d.dateTo = $('#date-to').val();
                     d.status = $('#status option:selected').val();
+                    d.provider = $('#provider option:selected').val();
                     d.phone = $('#phone').val();
                 },
                 complete: function (data) {
@@ -271,6 +286,15 @@
                         } else if(data==1) {
                             result='<span class="btn btn-success btn-xs">Nạp thành công</span>';
                         }
+                        return result;
+                    }
+                },
+                {
+                    "data": "provider" ,
+                    "name": "provider",
+                    "className":"text-center",
+                    "render":function (data) {
+                          var  result='<span class="btn btn-success btn-xs">'+data+'</span>';
                         return result;
                     }
                 },

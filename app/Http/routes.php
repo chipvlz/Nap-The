@@ -111,7 +111,7 @@ Route::group(['middleware' => ['auth.login']], function() {
         'as' => 'api.index',
         'uses' => 'Backend\ApiTokenController@index'
     ]);
-    Route::get('/tao-key-api',[
+    Route::post('/tao-key-api',[
         'as' => 'api.token',
         'uses' => 'Backend\ApiTokenController@generateKey'
     ]);

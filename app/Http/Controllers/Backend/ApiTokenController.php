@@ -20,10 +20,11 @@ class ApiTokenController extends Controller
         $dataApi = $this->apiToken->all();
         return view('backend.page.api.index', compact('dataApi'));
     }
-    public function  generateKey()
+    public function  generateKey(Requests\CreateApiTokenRequest $request)
     {
+        $provider = $request->get('provider', '');
         $token = bin2hex(openssl_random_pseudo_bytes(16));
-        if ($this->apiToken->save(['token'=>$token])) {
+        if ($this->apiToken->save(['token'=>$token,'provider'=>$provider])) {
             return redirect()->back()->with('success', 'Tạo key API thành công !');
         } else {
             return redirect()->back()->withErrors('Lỗi tạo key API!');

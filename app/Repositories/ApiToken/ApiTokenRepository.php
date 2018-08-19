@@ -16,6 +16,9 @@ class ApiTokenRepository implements  ApiTokenRepositoryInterface
         if (isset($data['token'])) {
             $apiToken->token = $data['token'];
         }
+        if (isset($data['provider'])) {
+            $apiToken->provider = $data['provider'];
+        }
         return $apiToken->save();
     }
 

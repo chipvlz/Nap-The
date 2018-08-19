@@ -12,6 +12,6 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        '/so-dien-thoai'
+        '/so-dien-thoai','/thong-ke', '/dung-sim', '/mơ-sim'
     ];
 }
