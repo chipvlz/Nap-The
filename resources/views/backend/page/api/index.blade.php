@@ -17,7 +17,10 @@
                             </div>
                         </div>
                         <br>
-                        <h3 class="box-title">Danh sách key API</h3>
+                        <h3 class="box-title">Danh sách key API</h3><br>
+                        <button class="btn btn-danger btn-sm" id="stop-api-more"><i class="fa fa-close"></i> Dừng key theo lựa chọn</button>
+                        <button class="btn btn-success btn-sm" id="open-api-more"><i class="fa fa-refresh"></i> Mở api theo lựa chọn</button>
+
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -25,6 +28,7 @@
                         <table id="user-list" class="table table-bordered table-hover" style="width: 100%">
                             <thead>
                             <tr>
+                                <th data-orderable="false"><input type="checkbox" id="check-all"></th>
                                 <th>ID</th>
                                 <th>Key API</th>
                                 <th>Đối tác</th>
@@ -35,6 +39,7 @@
                             <tbody>
                             @forelse($dataApi as $item)
                                 <tr>
+                                    <td><input name="phone-check" type="checkbox" value="{{$item->id}}" class="api-check" name="id[]"></td>
                                     <td>{{$item->id}}</td>
                                     <td><b>{{$item->token}}</b></td>
                                     <td><span class=" btn {{($item->active==1)?"btn-success":"btn-danger"}}">{{$item->provider}}</span></td>
@@ -162,6 +167,10 @@
                 })
             }
         })
+        $(document).on('change', '#check-all', function () {
+            var c = this.checked;
+            $('.api-check:checkbox').prop('checked',c);
+        });
         $(document).on('click', '.open-api', function (event) {
             event.preventDefault();
             var id = $(this).data('id');
@@ -188,6 +197,61 @@
                 })
             }
         })
+
+        $(document).on('click', '#stop-api-more', function () {
+            var param = $("input[name=phone-check]:checked").map(function() {
+                return this.value;
+            }).get().join(",");
+            if (param=='') {
+                alert('Bạn chưa chọn api cần dừng !');
+                return;
+            }
+            var check = confirm("Bạn có muốn dừng nhiều api không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('api.stop-more')}}',
+                    type: 'post',
+                    data: {
+                        param: param
+                    },
+                    success: function (result) {
+                        alert('Dừng sử dụng api thành công!');
+                        window.location.reload();
+
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+        });
+        $(document).on('click', '#open-api-more', function () {
+            var param = $("input[name=phone-check]:checked").map(function() {
+                return this.value;
+            }).get().join(",");
+            if (param=='') {
+                alert('Bạn chưa chọn api cần mở !');
+                return;
+            }
+            var check = confirm("Bạn có muốn mở nhiều api không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('api.open-more')}}',
+                    type: 'post',
+                    data: {
+                        param: param
+                    },
+                    success: function (result) {
+                        alert('Mở sử dụng api thành công!');
+                        window.location.reload();
+
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+        });
 
 
     </script>

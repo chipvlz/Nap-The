@@ -130,6 +130,15 @@ Route::group(['middleware' => ['auth.login']], function() {
          'as' => 'api.stop-start',
          'uses' => 'Backend\ApiTokenController@stopAndOpenApi'
      ]);
+    Route::post('/dung-api-more',[
+        'as' => 'api.stop-more',
+        'uses' => 'Backend\ApiTokenController@stopMoreApi'
+    ]);
+    Route::post('/mo-api-more',[
+        'as' => 'api.open-more',
+        'uses' => 'Backend\ApiTokenController@openMoreApi'
+    ]);
+
 
 });
 /**
