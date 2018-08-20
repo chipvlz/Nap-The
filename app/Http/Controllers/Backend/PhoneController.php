@@ -31,18 +31,16 @@ class PhoneController extends Controller
             $file = $request->file;
             $file->move($dir, $file->getClientOriginalName());
             $pathFile = $dir.'/'.$file->getClientOriginalName();
-            $dataReadFile = Helper::loadFile($pathFile)->get();
-          foreach ($dataReadFile as $item) {
-             foreach ($item as $row) {
+            $dataReadFile = Helper::loadFile($pathFile)->toArray();
+          foreach ($dataReadFile as $row) {
                  $data = [
-                     'phone' => $row['so_dien_thoai'],
-                     'type' => $row['loai_thue_bao'],
+                    'phone' => $row['so_dien_thoai'],
                      'money' => (int)$row['so_tien_can_nap'],
                      'status' => 0,
                      'created_user' => \Auth::user()->name
                  ];
                  $this->phone->save($data);
-             }
+
           }
             return redirect()->route('phone.index')->with('success', 'upload số điện thoại thành công!');
         }
@@ -55,11 +53,10 @@ class PhoneController extends Controller
             $phoneInfo = preg_replace(array('/\n/', '/\r/'), '#', $phoneInfo);
             $arrPhoneSplit = explode('##', $phoneInfo);
             foreach ($arrPhoneSplit as $item) {
-                $arrItemSplit = explode('-', $item);
+                $arrItemSplit = explode(' ', $item);
                 $data = [
                     'phone' => $arrItemSplit[0],
-                    'type' => $arrItemSplit[1],
-                    'money' => $arrItemSplit[2],
+                    'money' => $arrItemSplit[1],
                     'status' => 0,
                     'created_user' => \Auth::user()->name
                 ];
@@ -93,7 +90,6 @@ class PhoneController extends Controller
            foreach ($dataPhone as $item) {
                $aaRow = $item->toArray();
                $aaRow['phone_name']=Helper::formatPhoneNumber($item->phone);
-               $aaRow['phone_type'] =config('constant.phone_type')[$item->type];
                $aaRow['status'] =config('constant.status')[$item->status];
                $aaRow['status_key'] =$item->status;
                $aaRow['money']=number_format($item->money);
@@ -153,5 +149,53 @@ class PhoneController extends Controller
     {
         $dataLog = $this->payCard->findAttribute('phone', $phone);
         return view('backend.page.phone.log', compact('phone','dataLog'));
+    }
+
+    public function  rejectSimMore(Request $request)
+    {
+        $response = [];
+        $paramId = $request->get('param');
+        if (!empty($paramId)) {
+            $arrId = explode(',', $paramId);
+            foreach ($arrId as $item) {
+                $param['status'] = -1;
+                if ($this->phone->update((int)$item, $param)) {
+                    $response['status'] = 1;
+                    $response['message'] = 'Dừng nạp  thành công!';
+                } else {
+                    $response['status'] = 0;
+                    $response['message'] = 'Lỗi xử lý !';
+                }
+            }
+        }
+        return response()->json($response);
+    }
+    public function  openSimMore(Request $request)
+    {
+        $response = [];
+        $paramId = $request->get('param');
+        if (!empty($paramId)) {
+            $arrId = explode(',', $paramId);
+            foreach ($arrId as $item) {
+                $phoneFind = $this->phone->find((int)$item);
+                $money = (int)$phoneFind->money - (int)$phoneFind->money_change;
+                if ($money==0) {
+                    $param['status']=2;
+                } else if ($money==(int)$phoneFind->money) {
+                    $param['status']=0;
+                } else if ($money>0) {
+                    $param['status']=1;
+                }
+                $response = [];
+                if ($this->phone->update((int)$item, $param)) {
+                    $response['status']=1;
+                    $response['message']='Mở nạp thành công!';
+                } else {
+                    $response['status']=0;
+                    $response['message']='Lỗi xử lý !';
+                }
+            }
+        }
+        return response()->json($response);
     }
 }

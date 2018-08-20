@@ -61,10 +61,20 @@ Route::group(['middleware' => ['auth.login']], function() {
         'as' => 'phone.reject-sim',
         'uses' => 'Backend\PhoneController@rejectSim'
     ]);
+
+    Route::post('/dung-sim-more', [
+        'as' => 'phone.reject-sim-more',
+        'uses' => 'Backend\PhoneController@rejectSimMore'
+    ]);
     Route::post('/mo-sim', [
         'as' => 'phone.open-sim',
         'uses' => 'Backend\PhoneController@openSim'
     ]);
+    Route::post('/mo-sim-more', [
+        'as' => 'phone.open-sim-more',
+        'uses' => 'Backend\PhoneController@openSimMore'
+    ]);
+
 
 //route user
     Route::get('/doi-mat-khau', [

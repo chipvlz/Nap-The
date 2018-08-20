@@ -78,7 +78,9 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Danh sách đơn hàng</h3>
+                        <h3 class="box-title">Danh sách đơn hàng</h3><br/>
+                        <button class="btn btn-danger btn-sm" id="stop-sim-more"><i class="fa fa-close"></i> Dừng nạp theo lựa chọn</button>
+                        <button class="btn btn-success btn-sm" id="open-sim-more"><i class="fa fa-refresh"></i> Mở nạp theo lựa chọn</button>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -86,9 +88,9 @@
                         <table id="phone-list" class="table table-bordered table-hover" style="width: 100%">
                             <thead>
                             <tr>
+                                <th data-orderable="false"><input type="checkbox" id="check-all"></th>
                                 <th>ID</th>
                                 <th>Số Điện Thoại</th>
-                                <th>Loại Sim</th>
                                 <th>Số Tiền Cần Nạp</th>
                                 <th>Số Tiền Đã Nạp</th>
                                 <th>Trạng thái</th>
@@ -118,6 +120,8 @@
     <script src="{{asset('backend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('backend/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
     <script >
+
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -128,6 +132,14 @@
                 autoclose: true,
                 dateFormat: 'yy-mm-dd'
             }).datepicker("setDate", new Date())
+
+            // check all
+
+            $(document).on('change', '#check-all', function () {
+                var c = this.checked;
+                $('.phone-check:checkbox').prop('checked',c);
+            });
+
         });
         $(document).ready(function () {
             $('#date-to').datepicker({
@@ -158,7 +170,7 @@
             },
             //responsive: true,
             searching: false,
-            lengthMenu: [[10, 20,50, 100, 200], [10, 20,50, 100, 200]],
+            lengthMenu: [[50, 100,150, 200, 500, -1], [50, 100,150, 200, 500, 'ALL']],
             ajax: {
                 url: '{{URL::route('phone.post-index')}}',
                 type: 'POST',
@@ -184,7 +196,22 @@
 
             "initComplete":function( settings, data){
             },
+            "ordering": false,
             columns: [
+                {
+                    "data":{
+                        'id':'id',
+                        'status_key':'status_key',
+                        'phone':'phone'
+                    } ,
+                    "name": "checkbox",
+                    "orderable": false,
+                    "className":"text-center",
+                    "render":function (data) {
+                        return `<input name="phone-check" type="checkbox" value="`+data.id+`" class="phone-check" name="id[]">`;
+                    }
+
+                },
                 {
                     "data": "id" ,
                     "name": "id",
@@ -197,11 +224,6 @@
                     "render":function (data) {
                         return `<b>`+data+`</b>`;
                     }
-                },
-                {
-                    "data": "phone_type" ,
-                    "name": "type",
-                    "className":"text-center"
                 },
                 {
                     "data": "money" ,
@@ -318,6 +340,65 @@
                 })
             }
         })
+
+        //stop sim all
+
+        $(document).on('click', '#stop-sim-more', function () {
+            var param = $("input[name=phone-check]:checked").map(function() {
+                return this.value;
+            }).get().join(",");
+            if (param=='') {
+                alert('Bạn chưa chọn sim cần dừng !');
+                return;
+            }
+            var check = confirm("Bạn có muốn dừng nhiều sim không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('phone.reject-sim-more')}}',
+                    type: 'post',
+                    data: {
+                        param: param
+                    },
+                    success: function (result) {
+                        $("#check-all").prop('checked', false);
+                        alert('Dừng nạp sim thành công!');
+                        tableListPhone.ajax.reload();
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+        });
+        //open sim all
+        $(document).on('click', '#open-sim-more', function () {
+            var param = $("input[name=phone-check]:checked").map(function() {
+                return this.value;
+            }).get().join(",");
+            if (param=='') {
+                alert('Bạn chưa chọn sim cần mở !');
+                return;
+            }
+            var check = confirm("Bạn có muốn mở nạp nhiều sim không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('phone.open-sim-more')}}',
+                    type: 'post',
+                    data: {
+                        param: param
+                    },
+                    success: function (result) {
+                        $("#check-all").prop('checked', false);
+                        alert('Dừng nạp sim thành công!');
+                        tableListPhone.ajax.reload();
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+        });
+
 
 
     </script>
