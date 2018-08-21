@@ -23,6 +23,12 @@
                                 <textarea name="info_phone" required style="font-size: 20px; overflow-y: scroll"  class="form-control" id="" cols="30" rows="6"></textarea>
                             </div>
                         </div>
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Tiền Nạp</label>
+                                <input type="number" name="money" class="form-control">
+                            </div>
+                        </div>
                         <!-- /.box-body -->
 
                         <div class="box-footer">

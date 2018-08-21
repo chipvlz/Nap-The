@@ -26,6 +26,7 @@ class PhoneController extends Controller
 
     public function processUploadFile(Request $request)
     {
+        try{
         $dir = 'uploads/phone';
         if ($request->hasFile('file')) {
             $file = $request->file;
@@ -42,30 +43,41 @@ class PhoneController extends Controller
                  $this->phone->save($data);
 
           }
+            unlink($pathFile);
             return redirect()->route('phone.index')->with('success', 'upload số điện thoại thành công!');
+        }
+            }catch (\Exception $ex) {
+        return redirect()->back()->withErrors('Lỗi nhập danh sách sim');
         }
     }
 
     public function processEnterPhone(Request $request)
     {
-        $phoneInfo = $request->except('_token')['info_phone'];
-        if (!empty($phoneInfo)) {
-            $phoneInfo = preg_replace(array('/\n/', '/\r/'), '#', $phoneInfo);
-            $arrPhoneSplit = explode('##', $phoneInfo);
-            foreach ($arrPhoneSplit as $item) {
-                $arrItemSplit = explode(' ', $item);
-                $data = [
-                    'phone' => $arrItemSplit[0],
-                    'money' => $arrItemSplit[1],
-                    'status' => 0,
-                    'created_user' => \Auth::user()->name
-                ];
-                $this->phone->save($data);
+        try {
+            $phoneInfo = $request->except('_token')['info_phone'];
+            $money = $request->except('_token')['money'];
+            if (!empty($phoneInfo)) {
+                $phoneInfo = preg_replace(array('/\n/', '/\r/'), '#', $phoneInfo);
+                $arrPhoneSplit = explode('##', $phoneInfo);
+                foreach ($arrPhoneSplit as $item) {
+                    $itemInfo = preg_replace(array('/\t/'), '_', $item);
+                    $arrItemSplit = explode('_', $itemInfo);
+                    $data = [
+                        'phone' => $arrItemSplit[0],
+                        'money' => (empty($money)) ? $arrItemSplit[1] : $money,
+                        'status' => 0,
+                        'created_user' => \Auth::user()->name
+                    ];
+                    $this->phone->save($data);
+                }
+                return redirect()->route('phone.index')->with('success', 'Thêm mới thành công!');
+            } else {
+                return redirect()->back()->withErrors('Vui lòng nhập danh sách số điện thoại!');
             }
-            return redirect()->route('phone.index')->with('success', 'Thêm mới thành công!');
-        } else {
-            return redirect()->back()->withErrors('Vui lòng nhập danh sách số điện thoại!');
+        }catch (\Exception $ex) {
+            return redirect()->back()->withErrors('Lỗi nhập danh sách sim');
         }
+
 
     }
 
