@@ -64,31 +64,37 @@ class PhoneRepository implements  PhoneRepositoryInterface
     {
        return Phone::find($id);
     }
-    public function searchAndList($dateFrom, $dateTo, $type, $status, $phone)
+    public function searchAndList( $status, $phone)
     {
         $query = Phone::select('*')
-            ->where(\DB::raw('date(`created_at`)'),'>=', $dateFrom)
-            ->where(\DB::raw('date(`created_at`)'),'<=', $dateTo);
-        if($type!='999') {
-            $query->where('type', $type);
-        }
+                    ->where('status','<>',4)
+                    ->where('status','<>',2);
         if($status!=999) {
             $query->where('status', $status);
         }
         if(!empty($phone)) {
             $query->where('phone', 'like', '%'.$phone.'%');
         }
-        return $query->get();
+        return $query->orderBy('id', 'DESC')->get();
     }
 
     public function  getPhoneForMoney($money)
     {
-        $phone = Phone::select('id','phone', 'money', 'money_change', 'status')
+        $phoneUT = Phone::select('id','phone', 'money', 'money_change', 'status')
             ->where(\DB::raw('money-money_change'), '>=', $money)
-            ->whereIn('status', [0, 1])
+            ->whereIn('status', [3])
             ->orderBy(\DB::raw('RAND()'))
             ->first();
-        return $phone;
+           if ($phoneUT) {
+               return $phoneUT;
+           }else {
+               $phone = Phone::select('id','phone', 'money', 'money_change', 'status')
+                   ->where(\DB::raw('money-money_change'), '>=', $money)
+                   ->whereIn('status', [0, 1])
+                   ->orderBy(\DB::raw('RAND()'))
+                   ->first();
+               return $phone;
+           }
     }
 
     public  function  countPhoneNow()

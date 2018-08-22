@@ -23,6 +23,9 @@
             </li>
             <li class="treeview {{(Route::currentRouteName()=='phone.index')
                                    || (Route::currentRouteName()=='pay-card.index')
+                                   || (Route::currentRouteName()=='phone.success')
+                                   || (Route::currentRouteName()=='phone.reject')
+                                   || (Route::currentRouteName()=='phone.delete')
                                    ?"active open-menu":""}}">
                 <a href="#">
                     <i class="fa fa-id-card-o"></i> <span>Mạng VINAPHONE</span>
@@ -32,6 +35,9 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{(Route::currentRouteName()=='phone.index')?"active":""}}"><a href="{{URL::route('phone.index')}}"><i class="fa fa-circle-o"></i>Danh Sách Số Điện Thoại</a></li>
+                    <li class="{{(Route::currentRouteName()=='phone.success')?"active":""}}"><a href="{{URL::route('phone.success')}}"><i class="fa fa-circle-o"></i>Danh Sách SĐT hoàn thành</a></li>
+                    <li class="{{(Route::currentRouteName()=='phone.reject')?"active":""}}"><a href="{{URL::route('phone.reject')}}"><i class="fa fa-circle-o"></i>Danh Sách SĐT Dừng</a></li>
+                    <li class="{{(Route::currentRouteName()=='phone.delete')?"active":""}}"><a href="{{URL::route('phone.delete')}}"><i class="fa fa-circle-o"></i>Danh Sách SĐT Đã Xóa</a></li>
                     <li class="{{(Route::currentRouteName()=='pay-card.index')?"active":""}}"><a href="{{URL::route('pay-card.index')}}"><i class="fa fa-circle-o"></i> Log Giao Dịch</a></li>
                 </ul>
             </li>

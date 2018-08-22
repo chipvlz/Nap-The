@@ -23,29 +23,6 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="date-from">Từ ngày</label>
-                                        <input type="text" class="form-control" data-date-format="dd-mm-yyyy" id="date-from" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="date-to">Đến ngày</label>
-                                        <input type="text" class="form-control" data-date-format="dd-mm-yyyy" id="date-to" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="date-to">Loại sim</label>
-                                        <select name="type" id="type" class="form-control">
-                                            <option value="999">Tất cả</option>
-                                            @foreach(config('constant.phone_type') as $k=>$v)
-                                                <option value="{{$k}}">{{$v}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
                                         <label for="date-to">Trạng thái</label>
                                         <select name="status" id="status" class="form-control">
                                             <option value="999">Tất cả</option>
@@ -81,6 +58,11 @@
                         <h3 class="box-title">Danh sách đơn hàng</h3><br/>
                         <button class="btn btn-danger btn-sm" id="stop-sim-more"><i class="fa fa-close"></i> Dừng nạp theo lựa chọn</button>
                         <button class="btn btn-success btn-sm" id="open-sim-more"><i class="fa fa-refresh"></i> Mở nạp theo lựa chọn</button>
+                        <button class="btn btn-warning btn-sm" id="success-sim-more"><i class="fa fa-circle-o-notch"></i> Hoàn thành nạp theo lựa chọn</button>
+                       <p></p>
+                        <button class="btn btn-primary btn-sm" id="open-delete-sim"><i class="fa fa-trash"></i> Xóa sim theo lựa chọn</button>
+                        <button class="btn btn-success btn-sm" id="open-ut-sim"><i class="fa fa-refresh"></i> Ưu tiên sim theo lựa chọn</button>
+                        <button class="btn btn-danger btn-sm" id="reject-ut-sim"><i class="fa fa-trash"></i> Xóa ưu tiên sim theo lựa chọn</button>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -178,9 +160,6 @@
                 },
                 data: function ( d ) {
                     d._token = '{{csrf_token()}}';
-                    d.dateFrom = $('#date-from').val();
-                    d.dateTo = $('#date-to').val();
-                    d.type = $('#type option:selected').val();
                     d.status = $('#status option:selected').val();
                     d.phone = $('#phone').val();
                 },
@@ -390,6 +369,120 @@
                     success: function (result) {
                         $("#check-all").prop('checked', false);
                         alert('Dừng nạp sim thành công!');
+                        tableListPhone.ajax.reload();
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+        });
+
+        $(document).on('click', '#open-delete-sim', function () {
+            var param = $("input[name=phone-check]:checked").map(function() {
+                return this.value;
+            }).get().join(",");
+            if (param=='') {
+                alert('Bạn chưa chọn sim cần xóa !');
+                return;
+            }
+            var check = confirm("Bạn có muốn xóa sim không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('phone.delete-sim-more')}}',
+                    type: 'post',
+                    data: {
+                        param: param
+                    },
+                    success: function (result) {
+                        $("#check-all").prop('checked', false);
+                        alert('Xóa sim thành công!');
+                        tableListPhone.ajax.reload();
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+        });
+
+        //
+        $(document).on('click', '#success-sim-more', function () {
+            var param = $("input[name=phone-check]:checked").map(function() {
+                return this.value;
+            }).get().join(",");
+            if (param=='') {
+                alert('Bạn chưa chọn sim cần chuyển sang trạng thái hoàn thành !');
+                return;
+            }
+            var check = confirm("Bạn có muốn chuyển sang trạng thái hoàn thành  sim không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('phone.success-sim-more')}}',
+                    type: 'post',
+                    data: {
+                        param: param
+                    },
+                    success: function (result) {
+                        $("#check-all").prop('checked', false);
+                        alert('Hoàn thành sim thành công!');
+                        tableListPhone.ajax.reload();
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+        });
+
+        // danh sach uu tiên
+        $(document).on('click', '#open-ut-sim', function () {
+            var param = $("input[name=phone-check]:checked").map(function() {
+                return this.value;
+            }).get().join(",");
+            if (param=='') {
+                alert('Bạn chưa chọn sim cần chuyển sang sim ưu tiên !');
+                return;
+            }
+            var check = confirm("Bạn có muốn chuyển sang sim ưu tiên không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('phone.open-ut-sim-more')}}',
+                    type: 'post',
+                    data: {
+                        param: param
+                    },
+                    success: function (result) {
+                        $("#check-all").prop('checked', false);
+                        alert('Hoàn thành sim thành công!');
+                        tableListPhone.ajax.reload();
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+        });
+        //xóa ưu tiên
+        $(document).on('click', '#reject-ut-sim', function () {
+            var param = $("input[name=phone-check]:checked").map(function() {
+                return this.value;
+            }).get().join(",");
+            if (param=='') {
+                alert('Bạn chưa chọn sim cần xóa ưu tiên !');
+                return;
+            }
+            var check = confirm("Bạn có muốn xóa sim ưu tiên không?");
+            if (check == true) {
+                $.ajax({
+                    url: '{{URL::route('phone.reject-ut-sim-more')}}',
+                    type: 'post',
+                    data: {
+                        param: param
+                    },
+                    success: function (result) {
+                        $("#check-all").prop('checked', false);
+                        alert('Hoàn thành sim thành công!');
                         tableListPhone.ajax.reload();
                     },
                     error: function (error) {

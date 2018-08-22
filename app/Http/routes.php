@@ -40,6 +40,18 @@ Route::group(['middleware' => ['auth.login']], function() {
         'as' => 'phone.index',
         'uses' => 'Backend\PhoneController@listPhone'
     ]);
+    Route::get('/so-dien-thoai-hoan-thanh', [
+        'as' => 'phone.success',
+        'uses' => 'Backend\PhoneController@simSuccess'
+    ]);
+    Route::get('/so-dien-thoai-dung', [
+        'as' => 'phone.reject',
+        'uses' => 'Backend\PhoneController@simReject'
+    ]);
+    Route::get('/so-dien-thoai-da-xoa', [
+        'as' => 'phone.delete',
+        'uses' => 'Backend\PhoneController@simDelete'
+    ]);
     Route::get('/log/{phone}', [
         'as' => 'phone.log',
         'uses' => 'Backend\PhoneController@logOrder'
@@ -73,6 +85,22 @@ Route::group(['middleware' => ['auth.login']], function() {
     Route::post('/mo-sim-more', [
         'as' => 'phone.open-sim-more',
         'uses' => 'Backend\PhoneController@openSimMore'
+    ]);
+    Route::post('/xoa-sim-more', [
+        'as' => 'phone.delete-sim-more',
+        'uses' => 'Backend\PhoneController@deleteSimMore'
+    ]);
+    Route::post('/hoan-thanh-sim-more', [
+        'as' => 'phone.success-sim-more',
+        'uses' => 'Backend\PhoneController@successSimMore'
+    ]);
+    Route::post('/uu-tien-sim-more', [
+        'as' => 'phone.open-ut-sim-more',
+        'uses' => 'Backend\PhoneController@openUtSimMore'
+    ]);
+    Route::post('/xoa-uu-tien-sim-more', [
+        'as' => 'phone.reject-ut-sim-more',
+        'uses' => 'Backend\PhoneController@rejectUtSimMore'
     ]);
 
 

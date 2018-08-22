@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Models\PayCard;
+use App\Models\Phone;
 use App\Repositories\PayCard\PayCardRepositoryInterface;
 use App\Repositories\Phone\PhoneRepositoryInterface;
 use App\Support\Helper;
@@ -89,13 +90,10 @@ class PhoneController extends Controller
     public function processListPhone(Request $request)
     {
             $param = [];
-            $param['dateForm'] = ($request->has('dateFrom')) ? date('Y-m-d', strtotime($request->get('dateFrom'))) : date('Y-m-d');
-            $param['dateTo'] = ($request->has('dateTo')) ? date('Y-m-d', strtotime($request->get('dateTo'))) : date('Y-m-d');
-            $param['type'] = ($request->has('type')) ? $request->get('type') : '999';
             $param['status'] = (int)($request->has('status')) ? $request->get('status') : 999;
             $param['phone'] = ($request->has('phone')) ? $request->get('phone') : '';
 
-            $dataPhone = $this->phone->searchAndList($param['dateForm'], $param['dateTo'], $param['type'], $param['status'], $param['phone']);
+            $dataPhone = $this->phone->searchAndList($param['status'], $param['phone']);
            $data = [];
            $total['money_total']=0;
            $total['money_total_change']=0;
@@ -118,6 +116,22 @@ class PhoneController extends Controller
 
             ]);
 
+    }
+
+    public function simSuccess()
+    {
+        $dataPhone = Phone::where('status',2)->get();
+        return view('backend.page.phone.sim_success', compact('dataPhone'));
+    }
+    public function simDelete()
+    {
+        $dataPhone = Phone::where('status',4)->get();
+        return view('backend.page.phone.sim_delete', compact('dataPhone'));
+    }
+    public function simReject()
+    {
+        $dataPhone = Phone::where('status',-1)->get();
+        return view('backend.page.phone.sim_reject', compact('dataPhone'));
     }
 
     public function  rejectSim(Request $request)
@@ -183,6 +197,81 @@ class PhoneController extends Controller
         return response()->json($response);
     }
     public function  openSimMore(Request $request)
+    {
+        $response = [];
+        $paramId = $request->get('param');
+        if (!empty($paramId)) {
+            $arrId = explode(',', $paramId);
+            foreach ($arrId as $item) {
+                $phoneFind = $this->phone->find((int)$item);
+                $money = (int)$phoneFind->money - (int)$phoneFind->money_change;
+                if ($money==0) {
+                    $param['status']=2;
+                } else if ($money==(int)$phoneFind->money) {
+                    $param['status']=0;
+                } else if ($money>0) {
+                    $param['status']=1;
+                }
+                $response = [];
+                if ($this->phone->update((int)$item, $param)) {
+                    $response['status']=1;
+                    $response['message']='Mở nạp thành công!';
+                } else {
+                    $response['status']=0;
+                    $response['message']='Lỗi xử lý !';
+                }
+            }
+        }
+        return response()->json($response);
+    }
+
+    public function  deleteSimMore(Request $request)
+    {
+        $response = [];
+        $paramId = $request->get('param');
+        if (!empty($paramId)) {
+            $arrId = explode(',', $paramId);
+            foreach ($arrId as $item) {
+                $phoneFind = $this->phone->find((int)$item);
+                $phoneFind->status = 4;
+                $phoneFind->save();
+            }
+        }
+        return response()->json($response);
+    }
+
+    //
+    public function  successSimMore(Request $request)
+    {
+        $response = [];
+        $paramId = $request->get('param');
+        if (!empty($paramId)) {
+            $arrId = explode(',', $paramId);
+            foreach ($arrId as $item) {
+                $phoneFind = $this->phone->find((int)$item);
+                $phoneFind->status = 2 ;
+                $phoneFind->save();
+            }
+        }
+        return response()->json($response);
+    }
+
+    public function openUtSimMore(Request $request)
+    {
+        $response = [];
+        $paramId = $request->get('param');
+        if (!empty($paramId)) {
+            $arrId = explode(',', $paramId);
+            foreach ($arrId as $item) {
+                $phoneFind = $this->phone->find((int)$item);
+                $phoneFind->status = 3 ;
+                $phoneFind->save();
+            }
+        }
+        return response()->json($response);
+    }
+
+    public  function rejectUtSimMore(Request $request)
     {
         $response = [];
         $paramId = $request->get('param');

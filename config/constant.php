@@ -6,10 +6,10 @@ return [
         'TRASAU' => 'TRẢ SAU'
     ],
     'status'=>[
-        -1=>'Tạm dừng',
+        -1 => 'Tạm Dừng',
         0=>'Mới Nạp',
         1=>'Đang Nạp',
-        2=>'Nạp xong',
+        3=>'Đang Ưu Tiên',
 
     ],
     'pay_status'=>[

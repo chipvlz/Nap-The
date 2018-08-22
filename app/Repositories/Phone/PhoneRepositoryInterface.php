@@ -13,7 +13,7 @@
 
      public function  find($id);
 
-     public function searchAndList($dateFrom, $dateTo, $type, $status, $phone);
+     public function searchAndList($status, $phone);
 
      public function  getPhoneForMoney($money);
 

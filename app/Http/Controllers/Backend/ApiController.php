@@ -48,7 +48,9 @@ class ApiController extends Controller
                     if ($money == 0) {
                         $phoneForMoney->status = 2;
                     } else if ($money > 0) {
-                        $phoneForMoney->status = 1;
+                        if($phoneForMoney->status!=3) {
+                            $phoneForMoney->status = 1;
+                        }
                     }
                     $data = [
                         'money_change' => $phoneForMoney->money_change,
