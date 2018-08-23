@@ -41,6 +41,12 @@
                                 @empty
                                 @endforelse
                                 </tbody>
+                                <tfoot style="background: #00caff">
+                                <th colspan="2" class="text-left">Tổng</th>
+                                <th id="total-money">{{number_format($total['money_total'])}}</th>
+                                <th id="total-money-change">{{number_format($total['money_total_change'])}}</th>
+                                <th colspan="3"></th>
+                                </tfoot>
                             </table>
                         </div>
                     </div>

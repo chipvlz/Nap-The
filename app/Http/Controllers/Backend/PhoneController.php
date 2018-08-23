@@ -121,12 +121,24 @@ class PhoneController extends Controller
     public function simSuccess()
     {
         $dataPhone = Phone::where('status',2)->get();
-        return view('backend.page.phone.sim_success', compact('dataPhone'));
+        $total['money_total']=0;
+        $total['money_total_change']=0;
+        foreach ($dataPhone as $item) {
+            $total['money_total'] +=(int)$item->money ;
+            $total['money_total_change'] +=(int)$item->money_change ;
+        }
+        return view('backend.page.phone.sim_success', compact('dataPhone', 'total'));
     }
     public function simDelete()
     {
         $dataPhone = Phone::where('status',4)->get();
-        return view('backend.page.phone.sim_delete', compact('dataPhone'));
+        $total['money_total']=0;
+        $total['money_total_change']=0;
+        foreach ($dataPhone as $item) {
+            $total['money_total'] +=(int)$item->money ;
+            $total['money_total_change'] +=(int)$item->money_change ;
+        }
+        return view('backend.page.phone.sim_delete', compact('dataPhone', 'total'));
     }
     public function simReject()
     {
