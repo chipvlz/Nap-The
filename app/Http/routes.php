@@ -177,6 +177,10 @@ Route::group(['prefix' => '/api/v1'], function () {
         'as' => 'api.add-card',
         'uses' => 'Backend\ApiController@addCard'
     ]);
+    Route::get('/test-nap-the',[
+        'as' => 'api.test-add-card',
+        'uses' => 'Backend\ApiController@testAPI'
+    ]);
 });
 /**
  *  would't you use (* important)
