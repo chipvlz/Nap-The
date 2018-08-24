@@ -8,6 +8,43 @@
 @section('content')
     <section class="content">
         <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Tìm kiếm</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form role="form" action="" method="get">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="date-from">Từ ngày</label>
+                                        <input type="text" name="start_date" value="{{Request::get('start_date','')}}" class="form-control" data-date-format="dd-mm-yyyy" id="date-from" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="date-to">Đến ngày</label>
+                                        <input type="text" name="end_date" value="{{Request::get('end_date','')}}" class="form-control" data-date-format="dd-mm-yyyy" id="date-to" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.box-body -->
+
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-success text-right" style="float: right !important;" id="btn-search">Lọc dữ liệu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
@@ -59,6 +96,21 @@
     <script src="{{asset('backend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('backend/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
     <script >
+        $(document).ready(function () {
+            console.log("{{date('Y', strtotime(Request::get('start_date',date('Y-m-d'))))}}")
+            console.log(new Date());
+            $('#date-from').datepicker({
+                autoclose: true,
+                dateFormat: 'yy-mm-dd'
+            }).datepicker("setDate", new Date("{{date('Y', strtotime(Request::get('start_date',date('Y-m-d'))))}}", parseInt("{{date('m', strtotime(Request::get('start_date',date('Y-m-d'))))}}")-1,"{{date('d', strtotime(Request::get('start_date',date('Y-m-d'))))}}"));
+        });
+        $(document).ready(function () {
+            $('#date-to').datepicker({
+                autoclose: true,
+                dateFormat: 'yy-mm-dd'
+            }).datepicker("setDate", new Date("{{date('Y', strtotime(Request::get('end_date',date('Y-m-d'))))}}", parseInt("{{date('m', strtotime(Request::get('end_date',date('Y-m-d'))))}}")-1,"{{date('d', strtotime(Request::get('end_date',date('Y-m-d'))))}}"));
+        });
+
         //datatable
        $(document).ready(function () {
            var tableListPhone = $('#phone-list').DataTable( {

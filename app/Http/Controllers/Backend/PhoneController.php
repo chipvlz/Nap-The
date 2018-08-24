@@ -118,16 +118,22 @@ class PhoneController extends Controller
 
     }
 
-    public function simSuccess()
+    public function simSuccess(Request $request)
     {
-        $dataPhone = Phone::where('status',2)->get();
+        $param = [];
+        $param['dateForm'] = ($request->has('start_date')) ? date('Y-m-d', strtotime($request->get('start_date'))) : date('Y-m-d');
+        $param['dateTo'] = ($request->has('end_date')) ? date('Y-m-d', strtotime($request->get('end_date'))) : date('Y-m-d');
+        $dataPhone = Phone::where(\DB::raw('date(`created_at`)'),'>=', $param['dateForm'])
+            ->where(\DB::raw('date(`created_at`)'),'<=', $param['dateTo'])
+            ->where('status', 2)
+            ->get();
         $total['money_total']=0;
         $total['money_total_change']=0;
         foreach ($dataPhone as $item) {
             $total['money_total'] +=(int)$item->money ;
             $total['money_total_change'] +=(int)$item->money_change ;
         }
-        return view('backend.page.phone.sim_success', compact('dataPhone', 'total'));
+        return view('backend.page.phone.sim_success', compact('dataPhone', 'total', 'param'));
     }
     public function simDelete()
     {
