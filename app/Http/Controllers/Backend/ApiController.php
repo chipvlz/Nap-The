@@ -100,11 +100,9 @@ class ApiController extends Controller
 
     public function testAPI()
     {
-        $message = "Nạp thẻ thành công, mệnh giá thẻ 10000";
-        echo (int)explode(" ", $message)[7];
-        die;
 
-        //dd(Helper::payCard('26676080240769', '0886657364'));
+
+        dd(Helper::pay('132432543675478','3456478658769',10000));
 
     }
 

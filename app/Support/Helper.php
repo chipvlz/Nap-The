@@ -58,6 +58,15 @@ class Helper
         return json_decode($ret,true);
     }
 
+    public static function pay($code,$seri,$money) {
+        $url ="http://goldsunmachinery.vn/api/add-card?code={$code}&seri={$seri}&money={$money}";
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return json_decode($result,true);
+    }
+
     public static function get_string_between($string, $start, $end)
     {
         $string = " " . $string;
