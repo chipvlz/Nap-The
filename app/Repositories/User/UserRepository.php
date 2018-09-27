@@ -25,6 +25,12 @@ class UserRepository implements  UserRepositoryInterface
         if (isset($data['phone'])) {
             $user->phone = $data['phone'];
         }
+        if (isset($data['token'])) {
+            $user->token = $data['token'];
+        }
+        if (isset($data['is_admin'])) {
+            $user->is_admin = $data['is_admin'];
+        }
         if (isset($data['image'])) {
             $user->image = $data['image'];
         }

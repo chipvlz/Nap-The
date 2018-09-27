@@ -42,6 +42,11 @@
                             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                             <p class="text-danger">{{$errors->first('email')}}</p>
                         </div>
+                        <div class="form-group has-feedback {{($errors->has('token'))?"has-error":""}}">
+                            <input type="text" class="form-control" value="{{old('token')}}" name="token" placeholder="key API">
+                            <span class="glyphicon glyphicon-check form-control-feedback"></span>
+                            <p class="text-danger">{{$errors->first('token')}}</p>
+                        </div>
                         <div class="form-group has-feedback {{($errors->has('phone'))?"has-error":""}}">
                             <input type="text" class="form-control"  value="{{old('phone')}}" name="phone" placeholder="Số điện thoại">
                             <span class="glyphicon glyphicon-phone form-control-feedback"></span>
