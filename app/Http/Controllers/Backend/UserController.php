@@ -33,6 +33,9 @@ class UserController extends Controller
     public  function processAddUser(Requests\CreateUserRequest $request)
     {
         $dataRequest = $request->except('_token');
+        if(!empty($dataRequest['token'])) {
+            $dataRequest['is_admin']=1;
+        }
         if ($this->user->save($dataRequest)) {
             return redirect()->route('user.index')->with('success','Thêm mới user thành công!');
         } else {
