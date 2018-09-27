@@ -16,6 +16,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">DANH MỤC</li>
+            @if(empty(Auth::user()->is_admin))
             <li class="{{(Route::currentRouteName()=='home.index')?"active":""}}">
                 <a href="{{URL::route('home.index')}}">
                     <i class="fa fa-dashboard"></i> <span>Tổng hợp</span>
@@ -46,9 +47,16 @@
                     <i class="fa fa-send-o"></i> <span>Key Api</span>
                 </a>
             </li>
+
             <li class="{{(Route::currentRouteName()=='user.index')?"active":""}}">
                 <a href="{{URL::route('user.index')}}">
                     <i class="fa fa-user"></i> <span>Tài Khoản</span>
+                </a>
+            </li>
+            @endif
+            <li class="{{(Route::currentRouteName()=='add-card')?"active":""}}">
+                <a href="{{URL::route('add-card')}}">
+                    <i class="fa fa-plus-circle"></i> <span>Nạp thẻ</span>
                 </a>
             </li>
 

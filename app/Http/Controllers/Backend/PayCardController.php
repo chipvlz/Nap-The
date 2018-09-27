@@ -50,4 +50,15 @@ class PayCardController extends Controller
 
         return response()->json($data);
     }
+
+    public function addCard()
+    {
+        return view('backend.page.pay_card.add_card');
+    }
+
+    public function processAddCard(Request $request)
+    {
+        $dataRequest = $request->except('_token');
+        dd($dataRequest);
+    }
 }
