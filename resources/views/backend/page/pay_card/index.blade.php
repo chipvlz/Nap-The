@@ -55,7 +55,9 @@
                                     <div class="form-group">
                                         <label for="date-to">Đối Tác</label>
                                         <select name="provider" id="provider" class="form-control">
+                                            @if(empty(\Auth::user()->is_admin))
                                             <option value="999">Tất cả</option>
+                                            @endif
                                             @foreach($dataProvider as $item)
                                                 <option value="{{$item->provider}}">{{$item->provider}}</option>
                                             @endforeach
