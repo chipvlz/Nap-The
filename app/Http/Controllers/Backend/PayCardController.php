@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Models\ApiToken;
+use App\Models\Price;
 use App\Repositories\ApiToken\ApiTokenRepositoryInterface;
 use App\Repositories\PayCard\PayCardRepositoryInterface;
 use App\Repositories\Phone\PhoneRepositoryInterface;
@@ -24,7 +26,12 @@ class PayCardController extends Controller
 
     public function index()
     {
-        $dataProvider = $this->api->all();
+        if(empty(\Auth::user()->is_admin)) {
+            $dataProvider = $this->api->all();
+        } else {
+            $token = \Auth::user()->token;
+            $dataProvider = ApiToken::where('token', $token)->get();
+        }
         return view('backend.page.pay_card.index', compact('dataProvider'));
     }
 
@@ -57,7 +64,8 @@ class PayCardController extends Controller
 
     public function addCard()
     {
-        return view('backend.page.pay_card.add_card');
+        $price = Price::where('status',1)->orderBy('money', 'ASC')->get();
+        return view('backend.page.pay_card.add_card', compact('price'));
     }
 
     public function processAddCard(Request $request)

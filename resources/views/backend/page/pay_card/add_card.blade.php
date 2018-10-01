@@ -30,8 +30,12 @@
                                 <p class="text-danger">{{$errors->first('card_seri')}}</p>
                             </div>
                             <div class="form-group has-feedback {{($errors->has('money'))?"has-error":""}}">
-                                <input type="number" name="money" value="{{old('money')}}" class="form-control" placeholder="Số tiền">
-                                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                                <select name="money" id="money" class="form-control">
+                                    @forelse($price as $item)
+                                    <option value="{{$item->money}}" {{(old('money')==$item->money)?"selected":""}}>{{number_format($item->money)}}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
                                 <p class="text-danger">{{$errors->first('money')}}</p>
                             </div>
 
