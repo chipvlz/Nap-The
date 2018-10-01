@@ -30,6 +30,7 @@ class ApiController extends Controller
             $param['moneyRequest'] = (int)$request->get('money');
             $param['seriCardRequest'] = $request->get('seri', 'string');
             $param['codeCardRequest'] = $request->get('code', 'string');
+            //return response()->json(Helper::pay(  $param['codeCardRequest'], $param['seriCardRequest'],$param['moneyRequest']));
             $param['token'] = $request->get('token', 'string');
             $checkKeyApi = $this->apiToken->findAttribute('token', $param['token']);
             if ($checkKeyApi) {

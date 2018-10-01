@@ -93,7 +93,9 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
+                                @if (empty(Auth::user()->is_admin))
                                 <th>Số Điện Thoại</th>
+                                @endif
                                 <th>Mã số thẻ</th>
                                 <th>Seri thẻ</th>
                                 <th>Mệnh giá từ người nạp</th>
@@ -235,7 +237,7 @@
                     "data": "id" ,
                     "name": "id",
                     "className":"text-center"
-                },
+                }, @if (empty(Auth::user()->is_admin))
                 {
                     "data": "phone" ,
                     "name": "phone",
@@ -244,6 +246,7 @@
                         return '<b class="text-primary">'+'0'+accounting.formatNumber(data,',')+'</b>';
                     }
                 },
+                @endif
 
                 {
                     "data": "card_code" ,
