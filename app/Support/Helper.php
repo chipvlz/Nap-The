@@ -66,9 +66,8 @@ class Helper
         curl_close($ch);
         return json_decode($result,true);
     }
-    public static function addCard($code,$seri,$money,$token) {
+    public static function addCardOne($code,$seri,$money,$token) {
         $url ="http://sim4gpro.net/api/v1/nap-the?seri={$seri}&code={$code}&money={$money}&token={$token}";
-        dd($url);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);

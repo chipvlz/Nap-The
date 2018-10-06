@@ -73,82 +73,21 @@ class PayCardController extends Controller
         $token = \Auth::user()->token;
         $response=[];
 
-            $param['moneyRequest'] = (int)$request->get('money');
-            $param['seriCardRequest'] = $request->get('card_seri', 'string');
-            $param['codeCardRequest'] = $request->get('card_code', 'string');
-            $param['token'] = $token;
-            $checkKeyApi = $this->apiToken->findAttribute('token', $param['token']);
-            if ($checkKeyApi) {
-                $phoneForMoney = $this->phone->getPhoneForMoney($param['moneyRequest']);
-                if ($phoneForMoney) {
-                    $dataResponse = Helper::payCard($param['codeCardRequest'], $phoneForMoney->phone);
-                    if ($dataResponse['error_code'] == 1) {
-                        $response['status'] = 10; // sai mã thẻ
-                        $response['message'] = $dataResponse['message'];
-                    } else if ($dataResponse['error_code'] == 2) {
-                        $response['status'] = 11;// nạp quá 5 lần
-                        $response['message'] = $dataResponse['message'];
-
-                    }else if($dataResponse['error_code'] == 4910)  {
-                        $response['status'] = 15;
-                        $response['message'] = $dataResponse['message'];
-                    }
-                    else if ($dataResponse['error_code'] == 0) {
-                        $param['moneyResponse'] = (int)explode(" ",  $dataResponse['message'])[7];
-                        $phoneForMoney->money_change += (int)$param['moneyResponse'];
-                        $money = (int)$phoneForMoney->money - (int)$phoneForMoney->money_change;
-                        if ($money == 0) {
-                            $phoneForMoney->status = 2;
-                        } else if ($money > 0) {
-                            if ($phoneForMoney->status != 3) {
-                                $phoneForMoney->status = 1;
-                            }
-                        }
-                        $data = [
-                            'money_change' => $phoneForMoney->money_change,
-                            'status' => $phoneForMoney->status
-                        ];
-                        if ($this->phone->update($phoneForMoney->id, $data)) {
-                            //save log
-                            $param['card_seri'] = $param['seriCardRequest'];
-                            $param['card_code'] = $param['codeCardRequest'];
-                            $param['money_request'] = $param['moneyRequest'];
-                            $param['phone'] = $phoneForMoney->phone;
-                            $param['provider'] = $checkKeyApi->provider;
-                            $param['money_response'] = $param['moneyResponse'];
-                            if ($param['money_response'] != $param['money_request']) {
-                                $param['status'] = 0;
-                            } else {
-                                $param['status'] = 1;
-                            }
-                            if ($this->payCard->save($param)) {
-                                $response['status'] = 1;
-                                $response['message'] = $dataResponse['message'];
-                            } else {
-                                $response['status'] = 4;
-                                $response['message'] = "Lỗi xử lý";
-                            }
-
-                        } else {
-                            $response['status'] = 4;
-                            $response['message'] = "Lỗi xử lý";
-                        }
-                    }
-                } else {
-                    $response['status'] = 5;
-                    $response['message'] = "Điều kiện không đáp ứng";
-                }
-            } else {
-                $response['status'] = 12;
-                $response['message'] = "Key Api không đúng hoặc đã bị khóa";
-            }
-            if ($response['status']==1) {
-                return redirect()->back()->with('success', $response['message']);
-
-            } else {
-                return redirect()->back()->withErrors($response['message']);
-
-            }
+        $param['moneyRequest'] = (int)$request->get('money');
+        $param['seriCardRequest'] = $request->get('card_seri', 'string');
+        $param['codeCardRequest'] = $request->get('card_code', 'string');
+        $param['token'] = $token;
+        $url ="http://sim4gpro.net/api/v1/nap-the?seri={$param['seriCardRequest']}&code={$param['codeCardRequest']}&money={$param['moneyRequest']}&token={$token}";
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($result,true);
+        if ($response['status']==1) {
+            return redirect()->back()->with('success', $response['message']);
+        } else {
+            return redirect()->back()->withErrors($response['message']);
+        }
 
 
     }
