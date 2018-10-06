@@ -248,6 +248,7 @@ class ApiController extends Controller
             $response['status'] = 4;
             $response['message'] = "Lỗi xử lý";
         }
+        Log::info('Log:'.json_encode($param).'-message'.json_encode($response));
         return response()->json($response);
     }
 
