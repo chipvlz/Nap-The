@@ -16,7 +16,7 @@ use App\Http\Controllers\Controller;
 class PayCardController extends Controller
 {
 
-    public function  __construct(PayCardRepositoryInterface $payCard,PhoneRepositoryInterface $phone, ApiTokenRepositoryInterface $api, ApiTokenRepositoryInterface $apiToken)
+    public function  __construct(PayCardRepositoryInterface $payCard, PhoneRepositoryInterface $phone, ApiTokenRepositoryInterface $api, ApiTokenRepositoryInterface $apiToken)
     {
         $this->payCard = $payCard;
         $this->phone = $phone;
@@ -121,7 +121,7 @@ class PayCardController extends Controller
                             } else {
                                 $param['status'] = 1;
                             }
-                            if ($this->PayCard->save($param)) {
+                            if ($this->payCard->save($param)) {
                                 $response['status'] = 1;
                                 $response['message'] = $dataResponse['message'];
                             } else {

@@ -41,6 +41,18 @@ Route::group(['middleware' => ['auth.login']], function() {
             'as' => 'phone.index',
             'uses' => 'Backend\PhoneController@listPhone'
         ]);
+        Route::get('/so-dien-thoai-true', [
+            'as' => 'phone-true.index',
+            'uses' => 'Backend\PhoneTrueController@index'
+        ]);
+        Route::get('/them-moi-dien-thoai-true', [
+            'as' => 'phone-true.add',
+            'uses' => 'Backend\PhoneTrueController@add'
+        ]);
+        Route::post('/nhap-sim-true', [
+            'as' => 'phone-true.sim-true',
+            'uses' => 'Backend\PhoneTrueController@processEnterPhone'
+        ]);
         Route::get('/so-dien-thoai-hoan-thanh', [
             'as' => 'phone.success',
             'uses' => 'Backend\PhoneController@simSuccess'
@@ -61,6 +73,10 @@ Route::group(['middleware' => ['auth.login']], function() {
             'as' => 'phone.post-index',
             'uses' => 'Backend\PhoneController@processListPhone'
         ]);
+        Route::post('/so-dien-thoai-true', [
+            'as' => 'phone-true.post-index',
+            'uses' => 'Backend\PhoneTrueController@processListPhone'
+        ]);
 
         Route::post('/upload-file', [
             'as' => 'phone.upload',
@@ -75,6 +91,18 @@ Route::group(['middleware' => ['auth.login']], function() {
             'uses' => 'Backend\PhoneController@rejectSim'
         ]);
 
+        //process phone tru
+        Route::post('/sim-money-true', [
+            'as' => 'phone-true.sim-money-true',
+            'uses' => 'Backend\PhoneTrueController@simMoneyTrue'
+        ]);
+        Route::post('/sim-money-map', [
+            'as' => 'phone-true.sim-money-map',
+            'uses' => 'Backend\PhoneTrueController@simMoneyMap'
+        ]);
+
+
+        ///
         Route::post('/dung-sim-more', [
             'as' => 'phone.reject-sim-more',
             'uses' => 'Backend\PhoneController@rejectSimMore'

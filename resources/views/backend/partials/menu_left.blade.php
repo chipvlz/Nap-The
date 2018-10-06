@@ -28,6 +28,7 @@
                                    || (Route::currentRouteName()=='phone.success')
                                    || (Route::currentRouteName()=='phone.reject')
                                    || (Route::currentRouteName()=='phone.delete')
+                                   || (Route::currentRouteName()=='phone-true.index')
                                    ?"active open-menu":""}}">
                 <a href="#">
                     <i class="fa fa-id-card-o"></i> <span>Mạng VINAPHONE</span>
@@ -38,7 +39,9 @@
                 <ul class="treeview-menu">
                     @if(empty(Auth::user()->is_admin))
                     <li class="{{(Route::currentRouteName()=='phone.index')?"active":""}}"><a href="{{URL::route('phone.index')}}"><i class="fa fa-circle-o"></i>Danh Sách Số Điện Thoại</a></li>
-                    <li class="{{(Route::currentRouteName()=='phone.success')?"active":""}}"><a href="{{URL::route('phone.success')}}"><i class="fa fa-circle-o"></i>Danh Sách SĐT hoàn thành</a></li>
+                        <li class="{{(Route::currentRouteName()=='phone-true.index')?"active":""}}"><a href="{{URL::route('phone-true.index')}}"><i class="fa fa-circle-o"></i>Danh Sách Số Điện Thoại 2</a></li>
+
+                        <li class="{{(Route::currentRouteName()=='phone.success')?"active":""}}"><a href="{{URL::route('phone.success')}}"><i class="fa fa-circle-o"></i>Danh Sách SĐT hoàn thành</a></li>
                     <li class="{{(Route::currentRouteName()=='phone.reject')?"active":""}}"><a href="{{URL::route('phone.reject')}}"><i class="fa fa-circle-o"></i>Danh Sách SĐT Dừng</a></li>
                     <li class="{{(Route::currentRouteName()=='phone.delete')?"active":""}}"><a href="{{URL::route('phone.delete')}}"><i class="fa fa-circle-o"></i>Danh Sách SĐT Đã Xóa</a></li>
                     @endif

@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $repositories = [
             'Phone\PhoneRepositoryInterface' => 'Phone\PhoneRepository',
+            'PhoneTrue\PhoneTrueRepositoryInterface' => 'PhoneTrue\PhoneTrueRepository',
             'PayCard\PayCardRepositoryInterface' => 'PayCard\PayCardRepository',
             'User\UserRepositoryInterface' => 'User\UserRepository',
             'Email\EmailRepositoryInterface' => 'Email\EmailRepository',
