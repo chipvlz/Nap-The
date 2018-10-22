@@ -43,6 +43,7 @@ class PayCardController extends Controller
         $param['status'] = (int)($request->has('status')) ? $request->get('status') : 999;
         $param['provider'] = ($request->has('provider')) ? $request->get('provider') : 999;
         $param['phone'] = ($request->has('phone')) ? $request->get('phone') : '';
+        $param['code'] = ($request->has('code')) ? $request->get('code') : '';
         $column = $request->get("columns");
         $order = $request->get('order');
         $index=$order[0]["column"];
@@ -52,7 +53,7 @@ class PayCardController extends Controller
         $columnNameSort = $column[(int)$index]["name"];
         $data = [];
         $data['draw'] = (int)$request->get("draw", "int");
-        $dataReport = $this->payCard->searchAndList($param['dateForm'], $param['dateTo'], $param['status'], $param['phone'], $param['provider'],$start, $length, $columnNameSort, $sort);
+        $dataReport = $this->payCard->searchAndList($param['dateForm'], $param['dateTo'], $param['status'], $param['phone'],$param['code'], $param['provider'],$start, $length, $columnNameSort, $sort);
         $data['recordsTotal'] = (int)$dataReport['count_record'];
         $data['recordsFiltered'] = (int)$dataReport['count_record'];
         $data['total_money_request'] = $dataReport['total_money_request'];

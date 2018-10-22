@@ -70,6 +70,12 @@
                                         <input type="text" class="form-control" name="phone" id="phone" placeholder="số điện thoại">
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="date-to">Mã thẻ</label>
+                                        <input type="text" class="form-control" name="code" id="code" placeholder="Mã thẻ">
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -221,6 +227,7 @@
                     d.status = $('#status option:selected').val();
                     d.provider = $('#provider option:selected').val();
                     d.phone = $('#phone').val();
+                    d.code = $('#code').val(); 
                 },
                 complete: function (data) {
                     $('#total-money-request').html(accounting.formatNumber(data.responseJSON.total_money_request));

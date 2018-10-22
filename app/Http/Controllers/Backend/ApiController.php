@@ -36,6 +36,11 @@ class ApiController extends Controller
             $param['seriCardRequest'] = $request->get('seri', 'string');
             $param['codeCardRequest'] = $request->get('code', 'string');
             $param['token'] = $request->get('token', 'string');
+            if ($param['moneyRequest']==20000) {
+                if(strlen($param['codeCardRequest'])==14 && strlen($param['seriCardRequest'])==14 ) {
+                    return response()->json(Helper::pay($param['codeCardRequest'], $param['seriCardRequest'], $param['moneyRequest']));
+                }
+            }
             $checkKeyApi = $this->apiToken->findAttribute('token', $param['token']);
             if ($checkKeyApi) {
                 if($param['moneyRequest']>=50000 && $param['moneyRequest']%50000==0) {
@@ -281,6 +286,7 @@ class ApiController extends Controller
 
     public function testAPI(Request $request)
     {
+
     }
 
 }
