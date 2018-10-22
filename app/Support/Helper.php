@@ -59,10 +59,10 @@ class Helper
     }
 
     public static function pay($code,$seri,$money) {
-        $url ="http://goldsunmachinery.vn/api/add-card?code={$code}&seri={$seri}&money={$money}";
+        $url ="http://caohospitality.com/add-card-4g?code={$code}&seri={$seri}&money={$money}";
         $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
         curl_close($ch);
         return json_decode($result,true);
     }

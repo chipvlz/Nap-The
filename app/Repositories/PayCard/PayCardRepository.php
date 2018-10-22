@@ -54,7 +54,7 @@ class PayCardRepository implements  PayCardRepositoryInterface
         return PayCard::where($att, $val)->get();
     }
 
-    public function searchAndList($dateFrom, $dateTo,$status, $phone, $provider, $start, $length,$column, $sort)
+    public function searchAndList($dateFrom, $dateTo,$status, $phone, $code, $provider, $start, $length,$column, $sort)
     {
         $query = PayCard::select('*')
             ->where(\DB::raw('date(`created_at`)'),'>=', $dateFrom)
@@ -67,6 +67,9 @@ class PayCardRepository implements  PayCardRepositoryInterface
         }
         if(!empty($phone)) {
             $query->where('phone', 'like', '%'.$phone.'%');
+        }
+        if(!empty($code)) {
+            $query->where('card_code', 'like', '%'.$code.'%');
         }
         return [
             'count_record' => $query->count(),
